@@ -1,0 +1,1667 @@
+[2017-11-10 10:14:31 @reporter.demo] two 1
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-2:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/core/mp.py", line 121, in __sub_exec_task
+    return newtask.forExecute()
+  File "/data/nebula/gflow/core/mp.py", line 152, in forExecute
+    self.mutiThreadExecute()
+  File "/data/nebula/gflow/core/mp.py", line 281, in mutiThreadExecute
+    self.execute(_myTask)
+  File "/data/nebula/gflow/work/reporter/demo/two.py", line 25, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663942469376 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663931668224 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663922751232 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663905965824 task:10 
+ga_center [2017-11-10 10:14:31 @reporter.demo] pid: 139663402592000 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663410984704 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663889180416 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663897573120 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663914358528 task:10 
+192.168.1.186 public public ga_center 3306
+[2017-11-10 10:14:31 @reporter.demo] pid: 139662807004928 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663360628480 task:10 
+ga_center 192.168.1.186 public public ga_center 3306
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663377413888 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663385806592 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663394199296 task:10 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139662798612224 task:1 
+[2017-11-10 10:14:31 @reporter.demo] pid: 139663369021184 task:10 
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+Exception in thread Thread-16:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-18:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-15:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+Exception in thread Thread-14:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-5:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+Exception in thread Thread-12:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-13:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+Exception in thread Thread-4:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+Exception in thread Thread-6:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-8:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+Exception in thread Thread-17:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+Exception in thread Thread-7:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-9:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+ ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-10:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+ga_center 192.168.1.186 public public ga_center 3306
+Exception in thread Thread-11:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 39, in execute
+    db('ga_data', app_id=app_id).query("select count(1) from d_click")
+  File "/data/nebula/gflow/common/db/cdb.py", line 45, in db
+    print db_type + app_id, host, user, passwd, defaultdb, port
+TypeError: cannot concatenate 'str' and 'int' objects
+
+[2017-11-10 10:15:06 @reporter.demo] two 0
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397833606912 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397816821504 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397800036096 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397808428800 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397825214208 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397841999616 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:15:07 @reporter.demo] pid: 140396835366656 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10002
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_center  192.168.1.186 public public ga_center 3306
+10003
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10003
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10005
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10005
+10002
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397839902464 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397825214208 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397800036096 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397808428800 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397816821504 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140396835366656 task:10 
+[2017-11-10 10:20:17 @reporter.demo] pid: 140396826973952 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10010
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10003
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_centerga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_data   192.168.1.186 public public10010 ga_center 3306 192.168.1.186 public public ga_data_10010 3306
+
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ 10001
+10010ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+
+10001
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_dataga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ 10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10005
+ 10003
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397816821504 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397831509760 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397808428800 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397800036096 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397839902464 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140396835366656 task:10 
+[2017-11-10 10:25:27 @reporter.demo] pid: 140396826973952 task:1 
+ga_center ga_center  192.168.1.186 public public ga_center 3306
+ 192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10005
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10005
+10010
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10002
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10002
+10001
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10010
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397806331648 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140396835366656 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397839902464 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397814724352 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397823117056 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397831509760 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140396826973952 task:10 
+[2017-11-10 10:30:37 @reporter.demo] pid: 140397238019840 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10002
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10002
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10005
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10005
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center  192.168.1.186 public public ga_center 3306
+ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10003
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10003
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397823117056 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397831509760 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140396835366656 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397806331648 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397814724352 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397204449024 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397839902464 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140396826973952 task:1 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:35:48 @reporter.demo] pid: 140396843759360 task:10 
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10010
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10005
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10005
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10003
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10010
+ 10005
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:40:59 @reporter.demo] pid: 140396835366656 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397204449024 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397831509760 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397806331648 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397823117056 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397839902464 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397814724352 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397246412544 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:40:59 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:40:59 @reporter.demo] pid: 140396826973952 task:1 
+ga_center  ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ 10010
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_centerga_data 10010 192.168.1.186 public public ga_data_10010 3306
+  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10010
+10001
+ 10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10001
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10010
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397823117056 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397831509760 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397814724352 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397839902464 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397806331648 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140396826973952 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397204449024 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140396835366656 task:1 
+[2017-11-10 10:46:09 @reporter.demo] pid: 140397221234432 task:10 
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10001
+10002
+ 10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10005
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10010
+10005
+10002
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10001
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397837805312 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397812627200 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397804234496 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397821019904 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397829412608 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140396826973952 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:51:19 @reporter.demo] pid: 140396835366656 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10005
+10002
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10001
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 10:56:30 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397812627200 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397821019904 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397829412608 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397804234496 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140396826973952 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397837805312 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 10:56:30 @reporter.demo] pid: 140396835366656 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ 10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10003
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10002
+10003
+ 10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10002
+10003
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397804234496 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 11:01:40 @reporter.demo] pid: 140396835366656 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397196056320 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397829412608 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397821019904 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397812627200 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397837805312 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397850392320 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 11:01:40 @reporter.demo] pid: 140396826973952 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10005
+ 10003
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ 10005
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10003
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10003
+ 10005
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_dataga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10002
+10005
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397229627136 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397204449024 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140396843759360 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397804234496 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397829412608 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397812627200 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397246412544 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397238019840 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397196056320 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397212841728 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397221234432 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397821019904 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397837805312 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140396835366656 task:10 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140396826973952 task:1 
+[2017-11-10 11:06:51 @reporter.demo] pid: 140397850392320 task:10 
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10002
+10010
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10005
+10001
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+10002
+10005
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+10001
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10002
+10010
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+10010
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+10003
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+10001
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/core/mp.py", line 121, in __sub_exec_task
+    return newtask.forExecute()
+  File "/data/nebula/gflow/core/mp.py", line 154, in forExecute
+    self.doResultQueue()
+  File "/data/nebula/gflow/core/mp.py", line 469, in doResultQueue
+    mpResult.doResultQueue(tname=self.__class__.__name__, mapTask=self.mapTask(), resultSet=self.resultSet, executeTimeout=self.executeTimeout)
+  File "/data/nebula/gflow/core/mp.py", line 494, in doResultQueue
+    mpResult.__pushResultQueue(queue_key, resultSet)
+  File "/data/nebula/gflow/core/mp.py", line 511, in __pushResultQueue
+    singleton.getinstance('pjson').dumps(resultSet)
+  File "/usr/local/lib/python2.7/site-packages/redis/client.py", line 1388, in rpush
+    return self.execute_command('RPUSH', name, *values)
+  File "/usr/local/lib/python2.7/site-packages/redis/client.py", line 668, in execute_command
+    return self.parse_response(connection, command_name, **options)
+  File "/usr/local/lib/python2.7/site-packages/redis/client.py", line 680, in parse_response
+    response = connection.read_response()
+  File "/usr/local/lib/python2.7/site-packages/redis/connection.py", line 629, in read_response
+    raise response
+ResponseError: OOM command not allowed when used memory > 'maxmemory'.
+
+[2017-11-10 19:02:57 @reporter.demo] two 0
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_center  192.168.1.186 public public ga_center 3306
+10002
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837290051328 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837504018176 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837512673024 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837273265920 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837264873216 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837281658624 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837256480512 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837248087808 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836644108032 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836660893440 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836677678848 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836686071552 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836669286144 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139837239695104 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836652500736 task:10 
+[2017-11-10 19:02:57 @reporter.demo] pid: 139836635715328 task:1 
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10002 192.168.1.186 public public ga_data_10002 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10003 192.168.1.186 public public ga_data_10003 3306
+ga_data 10001 192.168.1.186 public public ga_data_10001 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10010 192.168.1.186 public public ga_data_10010 3306
+ ga_center  192.168.1.186 public public ga_center 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_data 10005 192.168.1.186 public public ga_data_10005 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+ga_center  192.168.1.186 public public ga_center 3306
+[2017-11-10 19:06:23 @reporter.demo] two 0
+10010
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649562957568 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:06:23 @reporter.demo] pid: 140648418105088 task:1 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:11:33 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140648409712384 task:10 
+[2017-11-10 19:16:43 @reporter.demo] pid: 140648418105088 task:1 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:21:54 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140648409712384 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:27:02 @reporter.demo] pid: 140648418105088 task:1 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:32:12 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:37:23 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:42:33 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140648409712384 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:47:43 @reporter.demo] pid: 140648418105088 task:1 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:52:53 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 19:58:03 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140648409712384 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 20:03:14 @reporter.demo] pid: 140648418105088 task:1 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140648409712384 task:10 
+[2017-11-10 20:08:23 @reporter.demo] pid: 140649022084864 task:1 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 20:13:33 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 20:18:44 @reporter.demo] pid: 140648409712384 task:1 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140648409712384 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 20:23:54 @reporter.demo] pid: 140648418105088 task:1 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649554302720 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649013692160 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140648988514048 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649005299456 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140648996906752 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649038870272 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140648434890496 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649022084864 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140648426497792 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649520731904 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649545910016 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140648418105088 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649537517312 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649030477568 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140649529124608 task:10 
+[2017-11-10 20:29:04 @reporter.demo] pid: 140648409712384 task:1 
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+    res = self.do(_callable, *args, **kwds)
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+    return _callable(*args, **kwds)
+  File "/data/nebula/gflow/core/mp.py", line 121, in __sub_exec_task
+    return newtask.forExecute()
+  File "/data/nebula/gflow/core/mp.py", line 151, in forExecute
+    self.prepareExecute()
+  File "/data/nebula/gflow/core/mp.py", line 363, in prepareExecute
+    mapTask = self.mapTask()
+  File "/data/nebula/gflow/work/reporter/demo/one.py", line 21, in mapTask
+    return self.assignTask()
+  File "/data/nebula/gflow/work/__work__.py", line 107, in assignTask
+    games = self.games()
+  File "/data/nebula/gflow/work/__work__.py", line 28, in games
+    games = memory(redis_config_name='ga_cache').get(games_key, j=True)
+  File "/data/nebula/gflow/core/db/redisdb.py", line 106, in get
+    result = self.redisInstance().get(key)
+  File "/usr/local/lib/python2.7/site-packages/redis/client.py", line 976, in get
+    return self.execute_command('GET', name)
+  File "/usr/local/lib/python2.7/site-packages/redis/client.py", line 673, in execute_command
+    connection.send_command(*args)
+  File "/usr/local/lib/python2.7/site-packages/redis/connection.py", line 610, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/usr/local/lib/python2.7/site-packages/redis/connection.py", line 585, in send_packed_command
+    self.connect()
+  File "/usr/local/lib/python2.7/site-packages/redis/connection.py", line 489, in connect
+    raise ConnectionError(self._error_message(e))
+ConnectionError: Error 111 connecting to 192.168.1.182:6379. Connection refused.
+

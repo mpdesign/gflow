@@ -1,0 +1,140 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Filename: slave.py
+
+# -----------------------------------
+# Revision:     2.0
+# Date:         2017-11-06
+# Author:       mpdesign
+# description:  启动脚本
+# -----------------------------------
+
+import warnings
+warnings.filterwarnings("ignore")
+from common.common import *
+from core.layer import *
+
+
+# 启动
+def start(jname, tname):
+    dm = newDaemon(jname, tname)
+    dm.start()
+    newjob = _import(jname)
+    # Ready before start
+    newjob.beforeStart()
+    # muti Execute Job
+    newjob.jobExecute()
+    # after start
+    newjob.afterStart()
+
+
+# 停止
+def stop(jname, tname):
+    newjob = _import(jname)
+    newjob.beforeStop()
+    time.sleep(newjob.waiteForStopJobTime)
+    newjob.afterStop()
+    dm = newDaemon(jname, tname)
+    if 'all' in argv_cli['dicts']:
+        dm.stop(True)
+    else:
+        dm.stop()
+
+
+# 重启
+def restart(jname, tname):
+    stop(jname, tname)
+    start(jname, tname)
+
+
+# --help
+def _help(jname):
+    print "\n"
+    print "description: must be running on the slave node\n"
+    print "usage: mp <action> [job] -option\n"
+    print "action: <start|stop|restart|help>\n"
+    print "option: <-l>\n"
+    print "-d int date range for rerunning , split by ',' , example 20140909,20141009\n"
+    print "-t register tasker , split by ',' \n"
+    print "\n"
+
+
+# 载入任务
+def _import(jname):
+
+    try:
+        # job
+        job_class_name = jname.split('.')[-1]
+        # 动态导入任务包
+        import_job = "from work.%s.%s import * " % (jname, job_class_name)
+        exec(import_job)
+        job_class_name = '%sJob' % job_class_name
+        job_class = eval(job_class_name)
+        newjob = job_class()
+        return newjob
+    except Exception, e:
+        # layer
+        if len(jname.split('.') > 1):
+            output('%s layer or job is not exists' % jname)
+        else:
+            try:
+                newlayer = layer(jname)
+                newlayer.run(argv_cli['argvs'][1])
+            except Exception, e:
+                # layer error
+                output('%s layer is not exists' % jname)
+        sys.exit(0)
+
+# 实例化daemon
+def newDaemon(jname, tname):
+    pname = jname if not tname else '%s.%s' % (jname, tname)
+    dm = Daemon(pname)
+    dm.set_stdfile(stdin="stdout", stderr="stdout", stdout="stdout")
+    dm.pidfile = "%s/%s.pid" % (path_config["pid_path"], pname)
+    return dm
+
+
+# 操作列表
+action = {'start': start, 'stop': stop, 'restart': restart, 'help': _help, '--help': _help}
+
+
+# 执行动作
+def switchAction(a, j, t):
+    if a not in action.keys():
+        output('action is null')
+        sys.exit(0)
+    else:
+        action.get(a)(j, t)
+        # print '\n'
+
+
+if __name__ == '__main__':
+
+    #只允许slave节点运行该程序
+    permit = False
+    iphost = ipaddress(3)
+    for ip2 in slave_node:
+        if ip2["ip"] in iphost:
+            permit = True
+    if not permit:
+        output("This host is not a slave node, can't run the job")
+        sys.exit(0)
+    if sys.argv[0][0:len(path_config['gf_path'])] != path_config['gf_path']:
+        output("Bin path must be config path, example: %s" % path_config['gf_path'])
+        sys.exit(0)
+
+    if len(sys.argv) < 3:
+        action_name = 'help'
+        job_name = 'help'
+    else:
+        action_name = argv_cli['argvs'][1]
+        job_name = argv_cli['argvs'][2]
+        task_name = argv_cli['dicts']['t'] if 't' in argv_cli['dicts'] else ''
+        file_2 = "%s/work/%s/%s.py" % (path_config['gf_path'], job_name.replace('.', '/'), job_name.split('.')[-1])
+        if not singleton.getinstance('pfile').isfile(file_2):
+            output('%s is a invalid job' % job_name)
+            sys.exit(0)
+
+    switchAction(action_name, job_name, task_name)
+
+

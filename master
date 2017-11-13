@@ -1,0 +1,136 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Filename: master.py
+
+# -----------------------------------
+# Revision:     2.0
+# Date:         2017-11-06
+# Author:       mpdesign
+# description:  主服务
+# -----------------------------------
+
+
+from core.core import *
+import readline
+from bin.scopy import *
+
+
+# 启动
+def start(params):
+    jname = params["job"]
+    ps = ''
+    for p in params["dicts"]:
+        ps = "%s -%s %s" % (ps, p, params["dicts"][p])
+    cmd = "%s/%s start %s %s" % (path_config["gf_path"], project_config["bin"], jname, ps)
+    distribute(cmd)
+    output('All slave has started ')
+
+
+# 停止
+def stop(params):
+    jname = params["job"]
+    ps = ''
+    for p in params["dicts"]:
+        ps = "%s -%s %s" % (ps, p, params["dicts"][p])
+    cmd = "%s/%s stop %s %s" % (path_config["gf_path"], project_config["bin"], jname, ps)
+    distribute(cmd)
+    output('All slave has stopped')
+
+
+# 重启
+def restart(params):
+
+    jname = params["job"]
+    ps = ''
+    for p in params["dicts"]:
+        ps = "%s -%s %s" % (ps, p, params["dicts"][p])
+    #start job
+    cmd = "%s/%s restart %s %s" % (path_config["gf_path"], project_config["bin"], jname, ps)
+    timeout = 6 if jname == 'r2m' else 3
+    distribute(cmd, timeout=timeout)
+    output('All slave has restarted')
+
+
+def importBin(bin_name, params):
+    import_bin = "from bin.%s import * " % bin_name
+    exec(import_bin)
+    return executeBin(params)
+
+
+def distribute(cmd, timeout=3):
+    singleton.getinstance('ptelnet').timeout(timeout).ssh2(action='ssh', host=slave_node, command=[cmd])
+
+
+actions = {'start': start, 'stop': stop, 'restart': restart}
+
+
+# 执行动作
+def switchAction(params):
+
+    if params["action"] in actions.keys():
+        if "job" not in params.keys() or not params["job"]:
+            output('Job is null')
+        else:
+            actions.get(params["action"])(params)
+    else:
+        bin_file = "%s/bin/%s.py" % (path_config['gf_path'], params["action"])
+        if not singleton.getinstance('pfile').isfile(bin_file):
+            output('Bin %s is not valid' % params["action"])
+        else:
+            importBin(params["action"], params)
+    logFile = "%s/%s/%s/%s" % (path_config['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
+    output('LogFile Dir: ' + logFile)
+
+
+def Run(params=None):
+    params = argv_cli if params is None else getargvs(params['argvs'])
+    params["action"] = action_name
+    params["job"] = job_name
+    # master唯一标识
+    _r = "%s%s" % (time.time(), random.randint(0, 1000000))
+    params["dicts"]['pid'] = md5(_r)[0:6]
+    if "id" in params["dicts"].keys():
+        del params["dicts"]['id']
+
+    switchAction(params)
+
+
+if __name__ == '__main__':
+    # 只允许master节点运行该程序
+    iphost = ipaddress(3)
+    if master_node["ip"] not in iphost:
+        output("This host is not a master node, can't run the job")
+        sys.exit(0)
+    if len(sys.argv) < 3:
+        print "DA 2.0 @mpdesign (python2.7, r1168, %s) " % time.strftime('%b %d %Y, %H:%M:%S', time.localtime())
+        print 'Type "help" for more information.'
+        if len(sys.argv) == 2:
+            del sys.argv[1]
+        while True:
+            ipt = raw_input(">>> ").strip(' ')
+            if not ipt:
+                continue
+            ipt = ipt.split(' ')
+            action_name = ipt[0]
+            if action_name == 'exit' or action_name == 'q' or action_name == 'quit':
+                print 'bye!'
+                sys.exit(0)
+            if len(ipt) < 2:
+                job_name = ''
+            else:
+                job_name = ipt[1]
+            sys.argv.append(action_name)
+            sys.argv.append(job_name)
+            iargv = dict()
+            iargv['argvs'] = []
+            iargv['argvs'].append(sys.argv[0])
+            for i in ipt:
+                iargv['argvs'].append(i.strip('\'"'))
+            Run(iargv)
+
+    else:
+        action_name = sys.argv[1]
+        job_name = sys.argv[2]
+        Run()
+
+
