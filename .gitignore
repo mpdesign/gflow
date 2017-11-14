@@ -1,0 +1,5 @@
+/pids/
+/logs/
+/tmp/
+/.idea/
+!.gitignore
