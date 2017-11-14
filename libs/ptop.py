@@ -39,7 +39,7 @@ class ptop:
                 passwd = singleton.getinstance('pcode').decode(ssh_info['password'])
 
             cmds = []
-            cmd = 'ps aux  | grep "%s" | grep "%s" | grep  -v "grep"' % (project_config["name"], project_config["bin"])
+            cmd = 'ps aux  | grep "%s" | grep  -v "grep"' % path_config["project_path"]
             cmds.append(cmd)
             out = singleton.getinstance('ptelnet').popen(ip2, user, passwd, cmds)
 
@@ -93,7 +93,7 @@ class ptop:
 
     def _task_list(self):
         if not self.taskList:
-            task_path = "%s/task" % path_config['gf_path']
+            task_path = "%s/task" % path_config['project_path']
             for parent, dirnames, filenames in os.walk(task_path):
                 for dirname in dirnames:
                     self.taskList.append(dirname)

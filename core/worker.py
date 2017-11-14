@@ -17,7 +17,7 @@ from comm.common import *
 class WorkerManager:
     def __init__(self, num_of_workers=10, PT='t'):
         #未开辟新进程之前获取父进程pid
-        self.w_pf = "%s/%s.pid" % (path_config["pid_path"], os.getpid())
+        self.w_pf = "%s/pids/%s.pid" % (path_config["project_path"], os.getpid())
         self.workQueue = None
         self.resultQueue = None
         self.workers = []

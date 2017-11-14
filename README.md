@@ -41,7 +41,7 @@ docker-compose up -d
 usage:
 master执行所有slave
 ```
-{gf_path}/master [start|stop|restart] [job]
+{project_path}/master [start|stop|restart] [job]
 ```
 拷贝工程代码：scopy [-f 绝对路径 ]  默认拷贝整个工程代码至所有slave节点
 命令帮助信息：help
@@ -49,12 +49,12 @@ master执行所有slave
 
 执行当前slave
 ```
-{gf_path}/slave [start|stop|restart] [job]
+{project_path}/slave [start|stop|restart] [job]
 ```
 
 任务编写规范实例：demo
-新建任务调度文件：{gf_path}/work/demo/demo.py
-新建子任务文件：  {gf_path}/work/demo/one.py
+新建任务调度文件：{project_path}/work/demo/demo.py
+新建子任务文件：  {project_path}/work/demo/one.py
 
 在demo.py文件注册子任务名：oneTask
 ```
@@ -112,12 +112,12 @@ class oneTask(demoJob):
 ```
 ```
 配置文件：config.py
-可执行权限：chmod 777 {gf_path}/[master|slave]
-启动命令：{gf_path}/[master|slave] start demo
-停止命令：{gf_path}/[master|slave] stop demo
-启动命令：{gf_path}/[master|slave] restart demo
-重跑命令：{gf_path}/[master|slave] restart demo -d [dateRange]
-批量启动：{gf_path}/[master|slave] restart demo -t [oneTask,twoTask...]
+可执行权限：chmod 777 {project_path}/[master|slave]
+启动命令：{project_path}/[master|slave] start demo
+停止命令：{project_path}/[master|slave] stop demo
+启动命令：{project_path}/[master|slave] restart demo
+重跑命令：{project_path}/[master|slave] restart demo -d [dateRange]
+批量启动：{project_path}/[master|slave] restart demo -t [oneTask,twoTask...]
 1）-d dateRange 时间范围
     按天 20150420,20150421
     按月 201504,201505

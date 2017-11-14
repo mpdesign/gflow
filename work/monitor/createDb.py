@@ -64,7 +64,7 @@ class createDbTask(monitorJob):
         db_host = ga_admin["host"]
         db_port = ga_admin["port"]
         # 授权的数据库账号密码
-        db_user = "%_%s" % (dType, app_id) if dType != 'ga_reporter' else 'gr_%' % app_id
+        db_user = "%s_%s" % (dType, app_id) if dType != 'ga_reporter' else 'gr_%s' % app_id
         db_pwd = randStr(20)
 
         # 分配权限

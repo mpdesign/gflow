@@ -21,7 +21,7 @@ class layer():
         if not self.layerName:
             output('Layer name is not exists', log_type='system')
             return None
-        layer_file = '%s/work/%s/%s.py' % (path_config['gf_path'], self.layerName, self.layerName)
+        layer_file = '%s/work/%s/%s.py' % (path_config['project_path'], self.layerName, self.layerName)
         if singleton.getinstance('pfile').isfile(layer_file):
             pkg_name = 'work.%s.%s' % (self.layerName, self.layerName)
         else:
@@ -50,7 +50,7 @@ class layer():
             ps = "%s -%s %s" % (ps, p, argv_cli["dicts"][p])
         for jobName in self.layerObj.registerJob:
             output('Job %s starting ...' % jobName)
-            cmd = "%s/%s %s %s %s" % (path_config["gf_path"], project_config["bin"], action, self.layerName + '.' + jobName, ps)
+            cmd = "%s/slave %s %s %s" % (path_config["project_path"], action, self.layerName + '.' + jobName, ps)
             os.system(cmd)
 
         output('All job has %sed ' % action, log_type='system')

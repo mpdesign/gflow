@@ -118,7 +118,7 @@ class redisdb:
             return
 
         # 载入config文件
-        with open("%s/lua/config.lua" % path_config['gf_path'], 'r') as f:
+        with open("%s/lua/config.lua" % path_config['project_path'], 'r') as f:
             luaconfigscript = f.read()
             try:
                 self.redisInstance().evalsha(luaconfigscript, numkeys, *keys_and_args)
@@ -126,7 +126,7 @@ class redisdb:
                 self.redisInstance().eval(luaconfigscript, numkeys, *keys_and_args)
 
         if luafile[-4:] == '.lua':
-            luafilepath = luafile if luafile[0:1] == '/' else "%s/lua/%s" % (path_config['gf_path'], luafile)
+            luafilepath = luafile if luafile[0:1] == '/' else "%s/lua/%s" % (path_config['project_path'], luafile)
             with open(luafilepath, 'r') as f:
                 luascript = f.read()
         else:

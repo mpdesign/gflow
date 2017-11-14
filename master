@@ -21,7 +21,7 @@ def start(params):
     ps = ''
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
-    cmd = "%s/%s start %s %s" % (path_config["gf_path"], project_config["bin"], jname, ps)
+    cmd = "%s/slave start %s %s" % (path_config["project_path"], jname, ps)
     distribute(cmd)
     output('All slave has started ')
 
@@ -32,7 +32,7 @@ def stop(params):
     ps = ''
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
-    cmd = "%s/%s stop %s %s" % (path_config["gf_path"], project_config["bin"], jname, ps)
+    cmd = "%s/slave stop %s %s" % (path_config["project_path"], jname, ps)
     distribute(cmd)
     output('All slave has stopped')
 
@@ -45,7 +45,7 @@ def restart(params):
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
     #start job
-    cmd = "%s/%s restart %s %s" % (path_config["gf_path"], project_config["bin"], jname, ps)
+    cmd = "%s/slave restart %s %s" % (path_config["project_path"], jname, ps)
     timeout = 6 if jname == 'r2m' else 3
     distribute(cmd, timeout=timeout)
     output('All slave has restarted')
@@ -73,7 +73,7 @@ def switchAction(params):
         else:
             actions.get(params["action"])(params)
     else:
-        bin_file = "%s/bin/%s.py" % (path_config['gf_path'], params["action"])
+        bin_file = "%s/bin/%s.py" % (path_config['project_path'], params["action"])
         if not singleton.getinstance('pfile').isfile(bin_file):
             output('Bin %s is not valid' % params["action"])
         else:

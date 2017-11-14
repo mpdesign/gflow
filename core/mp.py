@@ -386,7 +386,7 @@ class mp:
         if not task_name:
             output('%s is not exists' % task_name, log_type='system')
             return None
-        task_file = '%s/work/%s/%s.py' % (path_config['gf_path'], self.jobName.replace('.', '/'), task_name)
+        task_file = '%s/work/%s/%s.py' % (path_config['project_path'], self.jobName.replace('.', '/'), task_name)
         if singleton.getinstance('pfile').isfile(task_file):
             pkg_name = 'work.%s.%s' % (self.jobName, task_name)
         else:

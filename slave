@@ -90,7 +90,7 @@ def newDaemon(jname, tname):
     pname = jname if not tname else '%s.%s' % (jname, tname)
     dm = Daemon(pname)
     dm.set_stdfile(stdin="stdout", stderr="stdout", stdout="stdout")
-    dm.pidfile = "%s/%s.pid" % (path_config["pid_path"], pname)
+    dm.pidfile = "%s/pids/%s.pid" % (path_config["project_path"], pname)
     return dm
 
 
@@ -119,8 +119,8 @@ if __name__ == '__main__':
     if not permit:
         output("This host is not a slave node, can't run the job")
         sys.exit(0)
-    if sys.argv[0][0:len(path_config['gf_path'])] != path_config['gf_path']:
-        output("Bin path must be config path, example: %s" % path_config['gf_path'])
+    if sys.argv[0][0:len(path_config['project_path'])] != path_config['project_path']:
+        output("Bin path must be config path, example: %s" % path_config['project_path'])
         sys.exit(0)
 
     if len(sys.argv) < 3:
@@ -130,7 +130,7 @@ if __name__ == '__main__':
         action_name = argv_cli['argvs'][1]
         job_name = argv_cli['argvs'][2]
         task_name = argv_cli['dicts']['t'] if 't' in argv_cli['dicts'] else ''
-        file_2 = "%s/work/%s/%s.py" % (path_config['gf_path'], job_name.replace('.', '/'), job_name.split('.')[-1])
+        file_2 = "%s/work/%s/%s.py" % (path_config['project_path'], job_name.replace('.', '/'), job_name.split('.')[-1])
         if not singleton.getinstance('pfile').isfile(file_2):
             output('%s is a invalid job' % job_name)
             sys.exit(0)

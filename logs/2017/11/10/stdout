@@ -1665,3 +1665,26 @@ Traceback (most recent call last):
     raise ConnectionError(self._error_message(e))
 ConnectionError: Error 111 connecting to 192.168.1.182:6379. Connection refused.
 
+Exception in thread Thread-2:
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+    self.run()
+  File "/data/nebula/gflow/core/worker.py", line 212, in run
+  File "/data/nebula/gflow/core/worker.py", line 226, in do
+  File "/data/nebula/gflow/core/mp.py", line 121, in __sub_exec_task
+  File "/data/nebula/gflow/core/mp.py", line 149, in forExecute
+  File "/data/nebula/gflow/core/comm/common.py", line 34, in output
+  File "/data/nebula/gflow/core/comm/common.py", line 58, in logger
+  File "/data/nebula/gflow/libs/pfile.py", line 21, in set_file
+  File "/data/nebula/gflow/libs/pfile.py", line 88, in mkdirs
+  File "/usr/local/lib/python2.7/os.py", line 150, in makedirs
+    makedirs(head, mode)
+  File "/usr/local/lib/python2.7/os.py", line 150, in makedirs
+    makedirs(head, mode)
+  File "/usr/local/lib/python2.7/os.py", line 150, in makedirs
+    makedirs(head, mode)
+  File "/usr/local/lib/python2.7/os.py", line 157, in makedirs
+    mkdir(name, mode)
+OSError: [Errno 2] No such file or directory: '/data/nebula/gflow/logs'
+
+[2017-11-13 10:49:18 @reporter.demo] delatexit
