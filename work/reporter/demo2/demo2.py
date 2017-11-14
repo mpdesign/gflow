@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Filename: demoJob.py
+# Filename: demo2Job.py
 
 # -----------------------------------
 # Revision:     2.0
@@ -11,10 +11,10 @@
 from work.reporter.reporter import *
 
 
-class demoJob(workInterface):
+class demo2Job(workInterface):
     def __init__(self):
         workInterface.__init__(self)
         # 任务名注册表
         self.registerTask = [
-            'one'
+            'two'
         ]

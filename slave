@@ -74,7 +74,7 @@ def _import(jname):
         return newjob
     except Exception, e:
         # layer
-        if len(jname.split('.') > 1):
+        if len(jname.split('.')) > 1:
             output('%s layer or job is not exists' % jname)
         else:
             try:
