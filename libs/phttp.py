@@ -76,11 +76,11 @@ class phttp:
         if not isinstance(mails, type(['a'])):
             mails = mails.split(',')
         #设置服务器，用户名、口令以及邮箱的后缀
-        mail_host = config.mail_config["host"]
-        mail_user = config.mail_config["user"]
-        mail_pass = config.mail_config["password"]
+        mail_host = config.MAIL_CONFIG["host"]
+        mail_user = config.MAIL_CONFIG["user"]
+        mail_pass = config.MAIL_CONFIG["password"]
         
-        me = config.mail_config["name"]+"<"+mail_user+">"
+        me = config.MAIL_CONFIG["name"]+"<"+mail_user+">"
         msg = MIMEText(content)
         msg['Subject'] = subject
         msg['From'] = me
@@ -108,9 +108,9 @@ class phttp:
         if isinstance(phones, type(['a'])):
             phones = ",".join(phones)
         param = dict()
-        param['sdk'] = config.sms_config["sdk"]
-        param['code'] = config.sms_config["code"]
-        param['subcode'] = config.sms_config["subcode"]
+        param['sdk'] = config.SMS_CONFIG["sdk"]
+        param['code'] = config.SMS_CONFIG["code"]
+        param['subcode'] = config.SMS_CONFIG["subcode"]
         param['phones'] = phones
         param['msg'] = message
 

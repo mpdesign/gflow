@@ -15,7 +15,7 @@ from common.common import *
 class ptelnet:
 
     def __init__(self):
-        self.logfile = '%s/telnet.log' % path_config["log_path"]
+        self.logfile = '%s/telnet.log' % PATH_CONFIG["log_path"]
         self._timeout = None
         pass
 
@@ -34,7 +34,7 @@ class ptelnet:
         sshPool.parallel_for_complete().stop()
         for h in kwargs["host"]:
             ip2 = h["ip"]
-            conn = singleton.getinstance('mysql', 'core.db.mysql').conn(db_config['ga_center']['host'], db_config['ga_center']['user'], db_config['ga_center']['password'], db_config['ga_center']['db'], db_config['ga_center']['port'])
+            conn = singleton.getinstance('mysql', 'core.db.mysql').conn(DB_CONFIG['ga_center']['host'], DB_CONFIG['ga_center']['user'], DB_CONFIG['ga_center']['password'], DB_CONFIG['ga_center']['db'], DB_CONFIG['ga_center']['port'])
             ssh_info = conn.query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
             conn.close()
             if not ssh_info or not isinstance(ssh_info, type({})):
@@ -176,7 +176,7 @@ class ptelnet:
                 #日志目录下的文件不上传
                 _log_file_dir = 0
                 _name_list = _name.split('/')
-                un_file_path = ['logs', 'pids', 'tmp', 'ext.data']
+                un_file_path = ['logs', 'tmp', 'ext.data']
                 for up in _name_list:
                     if up in un_file_path:
                         if len(_name_list) > 1:

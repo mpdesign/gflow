@@ -15,7 +15,7 @@ from common.common import *
 class ptop:
 
     def __init__(self):
-        self.logfile = '%s/ptop.log' % path_config["log_path"]
+        self.logfile = '%s/ptop.log' % PATH_CONFIG["log_path"]
         self.taskList = []
         pass
 
@@ -23,9 +23,9 @@ class ptop:
         self.script_status()
 
     def script_status(self):
-        for h in slave_node:
+        for h in SLAVE_NODE:
             ip2 = h["ip"]
-            conn = singleton.getinstance('mysql', 'core.db.mysql').conn(db_config['ga_center']['host'], db_config['ga_center']['user'], db_config['ga_center']['password'], db_config['ga_center']['db'], db_config['ga_center']['port'])
+            conn = singleton.getinstance('mysql', 'core.db.mysql').conn(DB_CONFIG['ga_center']['host'], DB_CONFIG['ga_center']['user'], DB_CONFIG['ga_center']['password'], DB_CONFIG['ga_center']['db'], DB_CONFIG['ga_center']['port'])
             ssh_info = conn.query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
             conn.close()
             if not ssh_info or not isinstance(ssh_info, type({})):
@@ -39,7 +39,7 @@ class ptop:
                 passwd = singleton.getinstance('pcode').decode(ssh_info['password'])
 
             cmds = []
-            cmd = 'ps aux  | grep "%s" | grep  -v "grep"' % path_config["project_path"]
+            cmd = 'ps aux  | grep "%s" | grep  -v "grep"' % PATH_CONFIG["project_path"]
             cmds.append(cmd)
             out = singleton.getinstance('ptelnet').popen(ip2, user, passwd, cmds)
 
@@ -93,7 +93,7 @@ class ptop:
 
     def _task_list(self):
         if not self.taskList:
-            task_path = "%s/task" % path_config['project_path']
+            task_path = "%s/task" % PATH_CONFIG['project_path']
             for parent, dirnames, filenames in os.walk(task_path):
                 for dirname in dirnames:
                     self.taskList.append(dirname)

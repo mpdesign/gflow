@@ -20,7 +20,7 @@ def executeBin(params):
     print "option: \n"
     print "-c forced to copy the project code from master host to slave host\n"
     print "-d int date range for rerunning , split by ',' , example 20140909,20141009\n"
-    print "-f scopy file path, example '%s'\n" % path_config['project_path']
+    print "-f scopy file path, example '%s'\n" % PATH_CONFIG['project_path']
     print "-t register tasker , split by ',' \n"
     print "-now not wait to start  \n"
     print "\n"

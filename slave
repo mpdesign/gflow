@@ -32,7 +32,6 @@ def start(jname, tname):
 def stop(jname, tname):
     newjob = _import(jname)
     newjob.beforeStop()
-    time.sleep(newjob.waiteForStopJobTime)
     newjob.afterStop()
     dm = newDaemon(jname, tname)
     if 'all' in argv_cli['dicts']:
@@ -89,8 +88,8 @@ def _import(jname):
 def newDaemon(jname, tname):
     pname = jname if not tname else '%s.%s' % (jname, tname)
     dm = Daemon(pname)
-    dm.set_stdfile(stdin="stdout", stderr="stdout", stdout="stdout")
-    dm.pidfile = "%s/pids/%s.pid" % (path_config["project_path"], pname)
+    dm.set_stdfile(stdin="stdin", stderr="stderr", stdout="stdout")
+    dm.pidfile = "%s/tmp/pids/%s.pid" % (PATH_CONFIG["project_path"], pname)
     return dm
 
 
@@ -113,14 +112,15 @@ if __name__ == '__main__':
     #只允许slave节点运行该程序
     permit = False
     iphost = ipaddress(3)
-    for ip2 in slave_node:
+    for ip2 in SLAVE_NODE:
         if ip2["ip"] in iphost:
             permit = True
+            break
     if not permit:
         output("This host is not a slave node, can't run the job")
         sys.exit(0)
-    if sys.argv[0][0:len(path_config['project_path'])] != path_config['project_path']:
-        output("Bin path must be config path, example: %s" % path_config['project_path'])
+    if sys.argv[0][0:len(PATH_CONFIG['project_path'])] != PATH_CONFIG['project_path']:
+        output("Bin path must be config path, example: %s" % PATH_CONFIG['project_path'])
         sys.exit(0)
 
     if len(sys.argv) < 3:
@@ -130,7 +130,7 @@ if __name__ == '__main__':
         action_name = argv_cli['argvs'][1]
         job_name = argv_cli['argvs'][2]
         task_name = argv_cli['dicts']['t'] if 't' in argv_cli['dicts'] else ''
-        file_2 = "%s/work/%s/%s.py" % (path_config['project_path'], job_name.replace('.', '/'), job_name.split('.')[-1])
+        file_2 = "%s/work/%s/%s.py" % (PATH_CONFIG['project_path'], job_name.replace('.', '/'), job_name.split('.')[-1])
         if not singleton.getinstance('pfile').isfile(file_2):
             output('%s is a invalid job' % job_name)
             sys.exit(0)

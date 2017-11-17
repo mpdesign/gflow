@@ -8,7 +8,7 @@
 # description:  公共脚本
 # -----------------------------------
 
-from core.core import *
+from core.include import *
 from db.cdb import *
 from db.mdb import *
 

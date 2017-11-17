@@ -60,8 +60,6 @@ def mkInsertData(row, fields):
 def popData(gakey, schemes):
     app_id = gakey.split('_')[-1]
     qkey = "ga_data_queue_%s" % gakey
-    # 发布
-    pkey = "ga_data_pub_%s" % app_id
     rows_insert = {}
     i = 0
     rows_update = {}
@@ -74,7 +72,7 @@ def popData(gakey, schemes):
                 k, r = memory(redisConfig(redis_type='ga_data', app_id=app_id)).redisInstance().blpop(qkey, timeout=30)
         except Exception, e:
             if i > 0:
-                output(e, log_type='system')
+                output(('popData', e))
                 # 已获取过数据则跳出
                 break
             continue
@@ -85,8 +83,6 @@ def popData(gakey, schemes):
             else:
                 # 未取过数据，继续等待
                 continue
-        # 发布数据流，按需订阅
-        memory(redisConfig(redis_type='ga_data', app_id=app_id)).redisInstance().publish(pkey, '%s/%s' % (schemes['table'], r))
         # json_decode
         row = singleton.getinstance('pjson').loads(r)
         if not row or 'app_id' not in row.keys() or not row['app_id']:

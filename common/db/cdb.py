@@ -4,11 +4,11 @@ Created on 2017-08-16
 @author: mpdesign
 """
 
-from core.core import *
+from core.include import *
 
 
 def configdb(db_config_name='ga_center'):
-    dc = db_config[db_config_name]
+    dc = DB_CONFIG[db_config_name]
     host = dc["host"]
     user = dc["user"]
     passwd = dc["password"]
@@ -25,19 +25,19 @@ def db(db_type='ga_center', app_id=''):
             db_config_name = '%s_%s' % (db_type, app_id)
             # 随机更新配置
             db_rand = random.randint(1, 10)
-            if db_config_name not in db_config.keys() or db_rand < 3 :
+            if db_config_name not in DB_CONFIG.keys() or db_rand < 3 :
                 sql = "select * from ga_db where app_id='%s' and db='%s' limit 1" % (app_id, db_type)
                 game = db().query(sql)
                 if game and isinstance(game, type({})):
                     db_config_name = "%s_%s" % (game["db"], app_id)
-                    db_config[db_config_name] = {"host": game["host"], "user": game["user"], "password": game["password"], "db": db_config_name, "port": game["port"]}
+                    DB_CONFIG[db_config_name] = {"host": game["host"], "user": game["user"], "password": game["password"], "db": db_config_name, "port": game["port"]}
                 else:
-                    output('Db config error: %s' % sql, log_type='system')
+                    output('Db config error: %s' % sql)
                     return
         else:
-            output('Db config name error: db_type[%s] app_id[%s] ' % (db_type, app_id), log_type='system')
+            output('Db config name error: db_type[%s] app_id[%s] ' % (db_type, app_id))
             return
-    elif db_type not in db_config.keys():
+    elif db_type not in DB_CONFIG.keys():
         db_config_name = 'ga_center'
     else:
         db_config_name = db_type
@@ -48,7 +48,7 @@ def db(db_type='ga_center', app_id=''):
 # 安全执行，执行前检查表是否存在
 def db_save(table='', data=None, conditions=None, app_id='', dbname=''):
     if not dbname:
-        output('dbname %s is none' % dbname, log_type='system')
+        output('Dbname %s is none' % dbname)
     reslut = db(dbname, app_id).save(table=table, data=data, conditions=conditions)
     if str(reslut) == '1146' or str(reslut).find("doesn't exist") > 0:
         tableindb(table, app_id, dbname=dbname)

@@ -15,9 +15,9 @@ import json
 
 # redis数据库实例
 def memory(redis_config_name='ga_data'):
-    if redis_config_name not in redis_config.keys():
+    if redis_config_name not in REDIS_CONFIG.keys():
         redis_config_name = 'ga_data'
-    rc = redis_config[redis_config_name]
+    rc = REDIS_CONFIG[redis_config_name]
     host = rc["host"]
     port = rc["port"]
     dbno = rc["db"]
@@ -32,7 +32,7 @@ def redisConfig(redis_type='ga_data', app_id=''):
         # 未配置则查询数据库
         # 随机更新配置
         redis_rand = random.randint(1, 10)
-        if redis_config_name not in redis_config.keys() or redis_rand < 3:
+        if redis_config_name not in REDIS_CONFIG.keys() or redis_rand < 3:
             # 缓存配置
             redis_config_key = "ga_redis_%s" % redis_config_name
             result = memory(redis_config_name='ga_cache').get(redis_config_key, j=True)
@@ -41,14 +41,14 @@ def redisConfig(redis_type='ga_data', app_id=''):
                 result = db().query(sql)
                 if not emptyquery(result):
                     r = {"host": result["host"], "port": result["port"], "db": result["user"]}
-                    redis_config[redis_config_name] = r.copy()
+                    REDIS_CONFIG[redis_config_name] = r.copy()
                 else:
                     r = '-1'
                 memory(redis_config_name='ga_cache').set(redis_config_key, r, 300, j=True)
             elif result != '-1':
-                redis_config[redis_config_name] = result
+                REDIS_CONFIG[redis_config_name] = result
 
-    redis_config_name = redis_type if redis_config_name not in redis_config.keys() else redis_config_name
+    redis_config_name = redis_type if redis_config_name not in REDIS_CONFIG.keys() else redis_config_name
     return redis_config_name
 
 

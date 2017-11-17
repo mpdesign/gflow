@@ -10,10 +10,10 @@
 # frequency:        timely
 # -----------------------------------
 
-from feederInterface import *
-phttp = phttp()
+from streamInterface import *
 
-class activityCallback(feederInterface):
+
+class activityCallbackTask(streamInterface):
 
     #默认执行方法
     def execute(self, myTask=[]):
@@ -24,14 +24,12 @@ class activityCallback(feederInterface):
 
         self.mutiWorker(myTask=myTask, schemes=schemes, popKeyPre='callback')
 
-
     def doWorker(self, popKey, schemes):
 
         # 取出数据
-        rows_insert, rows_update = r2m_model.popData(popKey, schemes)
+        rows_insert, rows_update = streamModel.popData(popKey, schemes)
         # 处理数据
         self.callbackApi(rows_insert, schemes['table'])
-
 
     def callbackApi(self, rows_insert, table):
         if not rows_insert:
@@ -84,19 +82,19 @@ class activityCallback(feederInterface):
                             continue
                         p = p.split('=')
                         jsondata[p[0]] = '' if len(p) < 2 else p[1]
-                    callback_data = pjson.dumps(jsondata)
+                    callback_data = singleton.getinstance('pjson').dumps(jsondata)
             elif channel_info['ch_callback_api_body'] and channel_info['ch_callback_api_body'] != 'url':
                 callback_data = channel_info['ch_callback_api_body']
         else:
             callback_data = None
-        callback_res, ok = phttp.file_get_contents(callback_url, getstatus=True, data=callback_data, headers=callback_header)
+        callback_res, ok = singleton.getinstance('phttp').file_get_contents(callback_url, getstatus=True, data=callback_data, headers=callback_header)
 
         callback_result = callback_res
         if ok:
             try:
                 # 数据库查询 返回结果处理方式配置
                 doresult = itemDict(channel_info, 'ch_callback_api_doresult')
-                doresult = pjson.loads(doresult)
+                doresult = singleton.getinstance('pjson').loads(doresult)
                 api_format = itemDict(doresult, 'format')
                 # 成功条件
                 success_expr = itemDict(doresult, 'success')
@@ -104,7 +102,7 @@ class activityCallback(feederInterface):
                     exprs = True
                 else:
                     # json格式
-                    callback_res = pjson.loads(callback_res) if api_format == 'json' else callback_res
+                    callback_res = singleton.getinstance('pjson').loads(callback_res) if api_format == 'json' else callback_res
                     orexpr = True
                     andexpr = True
                     if "or" in success_expr.keys():

@@ -10,7 +10,7 @@
 # -----------------------------------
 
 
-from core.core import *
+from core.include import *
 import readline
 from bin.scopy import *
 
@@ -21,7 +21,7 @@ def start(params):
     ps = ''
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
-    cmd = "%s/slave start %s %s" % (path_config["project_path"], jname, ps)
+    cmd = "%s/slave start %s %s" % (PATH_CONFIG["project_path"], jname, ps)
     distribute(cmd)
     output('All slave has started ')
 
@@ -32,7 +32,7 @@ def stop(params):
     ps = ''
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
-    cmd = "%s/slave stop %s %s" % (path_config["project_path"], jname, ps)
+    cmd = "%s/slave stop %s %s" % (PATH_CONFIG["project_path"], jname, ps)
     distribute(cmd)
     output('All slave has stopped')
 
@@ -45,7 +45,7 @@ def restart(params):
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
     #start job
-    cmd = "%s/slave restart %s %s" % (path_config["project_path"], jname, ps)
+    cmd = "%s/slave restart %s %s" % (PATH_CONFIG["project_path"], jname, ps)
     timeout = 6 if jname == 'r2m' else 3
     distribute(cmd, timeout=timeout)
     output('All slave has restarted')
@@ -58,7 +58,7 @@ def importBin(bin_name, params):
 
 
 def distribute(cmd, timeout=3):
-    singleton.getinstance('ptelnet').timeout(timeout).ssh2(action='ssh', host=slave_node, command=[cmd])
+    singleton.getinstance('ptelnet').timeout(timeout).ssh2(action='ssh', host=SLAVE_NODE, command=[cmd])
 
 
 actions = {'start': start, 'stop': stop, 'restart': restart}
@@ -73,12 +73,12 @@ def switchAction(params):
         else:
             actions.get(params["action"])(params)
     else:
-        bin_file = "%s/bin/%s.py" % (path_config['project_path'], params["action"])
+        bin_file = "%s/bin/%s.py" % (PATH_CONFIG['project_path'], params["action"])
         if not singleton.getinstance('pfile').isfile(bin_file):
             output('Bin %s is not valid' % params["action"])
         else:
             importBin(params["action"], params)
-    logFile = "%s/%s/%s/%s" % (path_config['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
+    logFile = "%s/%s/%s/%s" % (PATH_CONFIG['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
     output('LogFile Dir: ' + logFile)
 
 
@@ -98,7 +98,7 @@ def Run(params=None):
 if __name__ == '__main__':
     # 只允许master节点运行该程序
     iphost = ipaddress(3)
-    if master_node["ip"] not in iphost:
+    if MASTER_NODE["ip"] not in iphost:
         output("This host is not a master node, can't run the job")
         sys.exit(0)
     if len(sys.argv) < 3:

@@ -39,9 +39,11 @@ def sql_escape(sql_str):
 #获取当前机器ip eth=3 取全部IP eth=0 取当前IP
 # ---------------------
 def ipaddress(eth=3):
+    if DEBUG_MODE > 0:
+        return [i['ip'] for i in SLAVE_NODE]
     try:
         ips = socket.gethostbyname(socket.gethostname()).strip()
-        if ips[0:len(lan_ip_prefix)] == lan_ip_prefix:
+        if ips[0:len(LAN_IP_PREFIX)] == LAN_IP_PREFIX:
             if eth == 3:
                 ips = [ips, '127.0.0.1']
             return ips
@@ -57,7 +59,7 @@ def ipaddress(eth=3):
         return ipl
     else:
         for i in ipl:
-            for j in slave_node:
+            for j in SLAVE_NODE:
                 if j['ip'] == i:
                     return i
         return ipl[eth]
@@ -232,14 +234,14 @@ def subQuickSort(data, start_index, end_index, order='asc', by=''):
 # 判断当前是否master
 def isMaster():
     iphost = ipaddress()
-    if master_node["ip"] in iphost:
-        return master_node["ip"]
+    if MASTER_NODE["ip"] in iphost:
+        return MASTER_NODE["ip"]
     return False
 
 
 def isSlave():
     iphost = ipaddress()
-    for ip2 in slave_node:
+    for ip2 in SLAVE_NODE:
         if ip2['ip'] in iphost:
             return ip2['ip']
     return False
@@ -270,59 +272,58 @@ def distributeTaskData(data=None):
 
     # 如果数据包含app_id, 则按游戏划分
     isbyapp = False
+    # 剔除有指定节点的任务
+    assign_app = {}
     if isinstance(data[0], type({})) and 'app_id' in data[0].keys():
-        sdata = {}
-        gdata = {}
+        all_data_by_app = {}
+        un_assign_app = {}
         for t in data:
-            gdata[t['app_id']] = 1
-            if t['app_id'] not in sdata:
-                sdata[t['app_id']] = []
-            sdata[t['app_id']].append(t)
-        data = gdata.keys()
+            if 'assign_node' in t.keys():
+                if t['assign_node'] not in assign_app:
+                    assign_app[t['assign_node']] = []
+                assign_app[t['assign_node']].append(t['app_id'])
+            else:
+                un_assign_app[t['app_id']] = 1
+            if t['app_id'] not in all_data_by_app:
+                all_data_by_app[t['app_id']] = []
+            all_data_by_app[t['app_id']].append(t)
+        data = un_assign_app.keys()
         data.sort()
         isbyapp = True
 
-    # 如果数据包含assign_node字段
-    if isinstance(data[0], type({})) and 'assign_node' in data[0].keys():
-        tdata = []
-        for t in data:
-            # 如果t指定的节点属于当前IP节点，则当前slave节点只分析这些任务t
-            if t['assign_node'] in iphost:
-                del t['assign_node']
-                tdata.append(t)
-            else:
-                # 否则剔除有指定节点的任务，以及指定的分析节点
-                # TODO
-                pass
-        return tdata
-
-    for ip2 in slave_node:
-        il = reduce(lambda x, y: (x << 8) + y, map(int, ip2["ip"].split('.')))
-        iplong.append(il)
-        if ip2["ip"] in iphost:
-            ciplong = il
+    # 当前节点ip long
+    cur_ip = ''
+    cur_iplong = ''
+    # 剩余可分配的节点
+    for node_ip in SLAVE_NODE:
+        il = reduce(lambda x, y: (x << 8) + y, map(int, node_ip["ip"].split('.')))
+        # 剔除指定节点
+        if node_ip["ip"] not in assign_app:
+            iplong.append(il)
+        if node_ip["ip"] in iphost:
+            cur_iplong = il
+            cur_ip = node_ip["ip"]
     iplong.sort()
-    slave_data = {}
 
-    for t in data:
-        # 构建一个循环先进先出的队列
-        accept_host = iplong[0]
-        del iplong[0]
-        iplong.append(accept_host)
-        if accept_host not in slave_data.keys():
-            slave_data[accept_host] = []
-        slave_data[accept_host].append(t)
-    if ciplong in slave_data.keys():
-        tdata = []
-        # add date: 2015-08-03
-        # 如果包含app_id, 则按游戏划分
-        if isbyapp:
-            for app_id in slave_data[ciplong]:
-                tdata += sdata[app_id]
-        else:
-            tdata = slave_data[ciplong]
-        return tdata
-    return None
+    slave_data = []
+    # 对指定节点分配分配任务至当前节点
+    if cur_ip in assign_app:
+        for app_id in assign_app[cur_ip]:
+            slave_data += all_data_by_app[app_id]
+    else:
+        # 对未指定节点的任务分配任务至当前节点
+        for t in data:
+            # 构建一个循环先进先出的节点队列，用于接收任务
+            accept_host = iplong[0]
+            del iplong[0]
+            iplong.append(accept_host)
+            if cur_iplong == accept_host:
+                if isbyapp:
+                    slave_data += all_data_by_app[t]
+                else:
+                    slave_data.append(t)
+
+    return slave_data
 
 
 # 数据库查询结果是否为空

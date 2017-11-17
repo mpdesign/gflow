@@ -17,7 +17,7 @@ from comm.common import *
 class WorkerManager:
     def __init__(self, num_of_workers=10, PT='t'):
         #未开辟新进程之前获取父进程pid
-        self.w_pf = "%s/pids/%s.pid" % (path_config["project_path"], os.getpid())
+        self.w_pf = "%s/tmp/pids/%s.pid" % (PATH_CONFIG["project_path"], os.getpid())
         self.workQueue = None
         self.resultQueue = None
         self.workers = []
@@ -109,7 +109,7 @@ class Processer(multiprocessing.Process):
             try:
                 _callable, args, kwds = self.workQueue.get(timeout=self.wqtimeout)
             except Exception, e:
-                output(('pQueue: ', _callable, args, kwds, e), log_type='system')
+                output(('pQueue: ', _callable, args, kwds, e))
                 time.sleep(10)
                 continue
 
@@ -199,7 +199,7 @@ class Threader(threading.Thread):
                 # 阻塞
                 _callable, args, kwds = self.workQueue.get(timeout=self.wqtimeout)
             except Exception, e:
-                output(('tQueue: ', _callable, args, kwds, e), log_type='system')
+                output(('tQueue: ', _callable, args, kwds, e))
                 time.sleep(10)
                 continue
             # stop by one workQueue exp: self.workQueue.put(("", [], {"stop": _stop}))

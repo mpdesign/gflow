@@ -7,7 +7,8 @@ class oneTask(demoJob):
 
     def beforeExecute(self):
         self.sleepExecute = 300
-        self.ifDoResultSets = True
+        self.waiteForTask = 'reporter.demo2.two'
+        # self.ifDoResultSets = True
 
      # 自定义任务列表
     def mapTask(self):
@@ -24,7 +25,6 @@ class oneTask(demoJob):
         # print 'myTask', myTask
         # output('one id1 %s' % id(singleton.getinstance('mysql', 'core.db.mysql')))
         # output('one id2 %s' % id(singleton.getinstance('mysql', 'core.db.mysql')))
-        output('pid: %s task:%s ' % (threading.currentThread().ident, len(myTask)))
         r = []
         for i in range(0, 10):
             r.append(random.randint(0, 1000000))
@@ -37,9 +37,8 @@ class oneTask(demoJob):
         for i in range(0, 1):
             app_id = [10001, 10002, 10003, 10005, 10010][random.randint(0,4)]
             db('ga_data', app_id=app_id).query("select count(1) from d_click")
-
         return r
 
-    def afterExecute(self):
-        output(('one resultSet', self.resultSet), log_type='system')
-        output(('one resultSets', self.resultSets), log_type='system')
+    # def afterExecute(self):
+    #     output(('one resultSet', self.resultSet))
+    #     output(('one resultSets', self.resultSets))

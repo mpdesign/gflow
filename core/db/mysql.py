@@ -6,7 +6,7 @@ Created on 2015-03-24
 import MySQLdb
 import MySQLdb.cursors
 from DBUtils.PooledDB import PooledDB
-from core.core import *
+from core.include import *
 
 
 # 最大连接数

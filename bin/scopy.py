@@ -17,12 +17,12 @@ def executeBin(params={}):
         ldir = params["dicts"]["f"]
         rdir = params["dicts"]["f"]
     else:
-        ldir = path_config["project_path"]
-        rdir = path_config["project_path"]
-    if not ldir or ldir[0:len(path_config['project_path'])] != path_config['project_path']:
-        output('Path is error, copy parent fold must be: %s' % path_config['project_path'])
+        ldir = PATH_CONFIG["project_path"]
+        rdir = PATH_CONFIG["project_path"]
+    if not ldir or ldir[0:len(PATH_CONFIG['project_path'])] != PATH_CONFIG['project_path']:
+        output('Path is error, copy parent fold must be: %s' % PATH_CONFIG['project_path'])
         sys.exit(0)
-    singleton.getinstance('ptelnet').ssh2(action='upload', host=slave_node, local_dir=ldir, remote_dir=rdir)
+    singleton.getinstance('ptelnet').ssh2(action='upload', host=SLAVE_NODE, local_dir=ldir, remote_dir=rdir)
     logger('Please wait for 3 sconds to copy the code to all slave node ', 'scopy')
     time.sleep(3)
     return True

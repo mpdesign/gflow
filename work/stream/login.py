@@ -10,9 +10,10 @@
 # frequency:        timely
 # -----------------------------------
 
-from feederInterface import *
+from streamInterface import *
 
-class login(feederInterface):
+
+class loginTask(streamInterface):
 
     #默认执行方法
     def execute(self, myTask=[]):
@@ -25,7 +26,7 @@ class login(feederInterface):
     @staticmethod
     def doWorker(popKey, schemes):
         # 取出数据
-        rows_insert, rows_update = r2m_model.popData(popKey, schemes)
+        rows_insert, rows_update = streamModel.popData(popKey, schemes)
         # 批量插入
         if rows_insert:
             for app_id in rows_insert:

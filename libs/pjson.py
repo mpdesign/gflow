@@ -27,14 +27,14 @@ class pjson:
         return r
 
     @staticmethod
-    def dumps(obj=None, t=''):
+    def dumps(obj=None, t='', indent=0):
         if not obj:
             return None
         try:
             if t == 'cPickle':
                 r = cPickle.dumps(obj)
             else:
-                r = json.dumps(obj)
+                r = json.dumps(obj, indent=indent)
         except Exception, e:
             return None
         return r

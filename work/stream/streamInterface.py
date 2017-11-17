@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
-# Filename: feederInterface.py
+# Filename: streamInterface.py
 
 # -----------------------------------
 # Revision:         2.0
-# Date:             2014-07-15
+# Date:             2017-11-15
 # Author:           mpdesign
-# Website:          api.dc.737.com/da
-# description:      pop data from redis to mysql
 # frequency:        timely
-# work:             activity, login, user, player, pay, event
 # -----------------------------------
 
-from feeder import *
-import feederModel
+from stream import *
+import streamModel
 
 
-class feederInterface(feederJob):
+class streamInterface(streamJob):
 
     def __init__(self):
+
         setattr(self, "%sPool" % self.__class__.__name__, None)
         setattr(self, "%sNum" % self.__class__.__name__, 0)
         workInterface.__init__(self)
@@ -71,15 +69,13 @@ class feederInterface(feederJob):
 
     # 循环处理数据，是否还有更多数据在队列未处理
     def whileWorker(self, popKey, schemes):
-        # 监听任务终止信号
-        self.ifStop()
         self.doWorker(popKey, schemes)
 
     @staticmethod
     def doWorker(popKey, schemes):
 
         # 取出数据
-        rows_insert, rows_update = feederModel.popData(popKey, schemes)
+        rows_insert, rows_update = streamModel.popData(popKey, schemes)
 
         # 处理数据
-        feederModel.doData(rows_insert, rows_update, schemes)
+        streamModel.doData(rows_insert, rows_update, schemes)

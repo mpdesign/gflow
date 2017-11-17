@@ -19,7 +19,7 @@ class createDbTask(monitorJob):
         self.sleepExecute = 60
 
     def mapTask(self):
-        return default_node
+        return DEFAULT_NODE
 
     def execute(self, myTask=[]):
         # 当前可分配的数据库

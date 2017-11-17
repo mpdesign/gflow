@@ -18,7 +18,7 @@ class alterTableJob(monitorJob):
         self.breakExecute = True
 
     def mapTask(self):
-        return default_node
+        return DEFAULT_NODE
 
     def execute(self, myTask=[]):
         gs = self.assignTask(byserver=False)

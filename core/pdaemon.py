@@ -11,7 +11,7 @@ import sys
 import os
 import time
 import atexit
-from signal import SIGTERM
+import signal
 from config.config import *
 
 
@@ -23,7 +23,7 @@ class Daemon:
         self.stderr = '/dev/stderr'
         self.pname = pname
         self.pidfile = "/tmp/slave_process_%s.pid" % pname
-        self.logpath = "%s/%s/%s/%s" % (path_config['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
+        self.logpath = "%s/%s/%s/%s" % (PATH_CONFIG['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
 
     # 标准输出
     def set_stdfile(self, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
@@ -105,7 +105,7 @@ class Daemon:
         if whole:
             for pid in pids:
                 try:
-                    os.kill(int(pid.strip()), SIGTERM)
+                    os.kill(int(pid.strip()), signal.SIGTERM)
                 except Exception,e:
                     continue
             os.remove(self.pidfile)
@@ -114,7 +114,7 @@ class Daemon:
             # 杀死最近一个进程
             _pid = int(pids[len(pids)-1].strip())
             try:
-                os.kill(_pid, SIGTERM)
+                os.kill(_pid, signal.SIGTERM)
             except OSError, err:
                 pass
             self.ifexistspid(_pid, ifdel=True)
