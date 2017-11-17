@@ -15,7 +15,7 @@ from common.common import *
 class ptelnet:
 
     def __init__(self):
-        self.logfile = '%s/telnet.log' % PATH_CONFIG["log_path"]
+        self.logfile = '%s/%s/telnet.log' % (PATH_CONFIG["log_path"], time.strftime('%Y/%m/%d', time.localtime()))
         self._timeout = None
         pass
 
@@ -25,20 +25,18 @@ class ptelnet:
 
     def ssh2(self, **kwargs):
         if not kwargs["host"]:
-            logger('host is null', 'telnet')
+            output('host is null', log_type='telnet')
             return
         if not kwargs["action"]:
-            logger('action is null', 'telnet')
+            output('action is null', log_type='telnet')
             return
         sshPool = WorkerManager(len(kwargs["host"]))
         sshPool.parallel_for_complete().stop()
         for h in kwargs["host"]:
             ip2 = h["ip"]
-            conn = singleton.getinstance('mysql', 'core.db.mysql').conn(DB_CONFIG['ga_center']['host'], DB_CONFIG['ga_center']['user'], DB_CONFIG['ga_center']['password'], DB_CONFIG['ga_center']['db'], DB_CONFIG['ga_center']['port'])
-            ssh_info = conn.query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
-            conn.close()
+            ssh_info = sysConnMysql().query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
             if not ssh_info or not isinstance(ssh_info, type({})):
-                logger('%s has not been config in db' % ip2, 'telnet')
+                output('%s has not been config in db' % ip2, log_type='telnet')
                 continue
             if ssh_info['password'][-4:] == '.pem':
                 user = ssh_info['user']
@@ -47,18 +45,18 @@ class ptelnet:
                 user = singleton.getinstance('pcode').decode(ssh_info['user'])
                 passwd = singleton.getinstance('pcode').decode(ssh_info['password'])
             if not ip2 or not user or not passwd:
-                logger('ip or user or passwd is null', 'telnet')
+                output('ip or user or passwd is null', log_type='telnet')
                 return
 
             if kwargs["action"] == 'ssh':
                 if not kwargs["command"]:
-                    logger('command is null', 'telnet')
+                    output('command is null', log_type='telnet')
                     return
                 sshPool.add(self.ssh, ip2, user, passwd, kwargs["command"])
                 # t = threading.Thread(target=self.ssh, args=(ip2, user, passwd, kwargs["command"]))
             else:
                 if not kwargs["local_dir"] or not kwargs["remote_dir"]:
-                    logger('command is null', 'telnet')
+                    output('command is null', log_type='telnet')
                     return
                 local_dir = kwargs["local_dir"]
                 remote_dir = kwargs["remote_dir"]
@@ -69,7 +67,7 @@ class ptelnet:
                     sshPool.add(self.upload, ip2, user, passwd, local_dir, remote_dir)
                     # t = threading.Thread(target=self.upload, args=(ip2, user, passwd, local_dir, remote_dir))
                 else:
-                    logger('action is invalid', 'telnet')
+                    output('action is invalid', log_type='telnet')
                     return
             # t.start()
         timeOut = 0
@@ -89,13 +87,13 @@ class ptelnet:
                     ot = self._exec_command(ssh, m)
                     outs.append(ot)
                 except Exception, e:
-                    logger(ip2 + ' popen/m ' + m + str(e), 'telnet')
+                    output(ip2 + ' popen/m ' + m + str(e), log_type='telnet')
                     continue
         else:
             try:
                 outs = self._exec_command(ssh, command)
             except Exception, e:
-                logger(ip2 + ' popen ' + str(command) + str(e), 'telnet')
+                output(ip2 + ' popen ' + str(command) + str(e), log_type='telnet')
                 pass
         ssh.close()
         return outs
@@ -111,11 +109,11 @@ class ptelnet:
                     print fmt % (ip2, '%s' % m)
                     print '\n'.join([fmt % ('', '%s' % ot) for ot in ots['out'] if ot])
                 except Exception, e:
-                    logger(ip2 + ' ssh/m ' + m + str(e), 'telnet')
+                    output(ip2 + ' ssh/m ' + m + str(e), log_type='telnet')
                     pass
             ssh.close()
         except Exception, e:
-            logger(str(command) + ' ssh ' + str(e), 'telnet')
+            output(str(command) + ' ssh ' + str(e), log_type='telnet')
             return
 
     def _exec_command(self, _ssh, m):
@@ -134,7 +132,7 @@ class ptelnet:
             for e in err:
                 ot["err"].append(e.strip())
         except Exception, e:
-            logger(m + ' _exec_command ' + str(e), 'telnet')
+            output(m + ' _exec_command ' + str(e), log_type='telnet')
             pass
         return ot
 
@@ -158,12 +156,12 @@ class ptelnet:
         if last_str == '/':
             remote_dir = remote_dir[0:-1]
         if not local_dir or not remote_dir:
-            logger('local_dir or remote_dir is null ', 'telnet')
+            output('local_dir or remote_dir is null ', log_type='telnet')
             return None
         # master节点不上传
         iphost = ipaddress()
         if ip2 in iphost:
-            logger('The files of master node %s is not alowed to be covered ' % ip2, 'telnet')
+            output('The files of master node %s is not alowed to be covered ' % ip2, log_type='telnet')
             return None
         try:
             paramiko.util.log_to_file(self.logfile)
@@ -203,7 +201,7 @@ class ptelnet:
                             if filespath == 'slave':
                                 sftp.chmod(remote_file, 0777)
                         except Exception, e:
-                            logger(ip2 + ' upload.put.mkdir ' + local_file + ' ' + remote_file + ' ' + str(e), 'telnet')
+                            output(ip2 + ' upload.put.mkdir ' + local_file + ' ' + remote_file + ' ' + str(e), log_type='telnet')
                             continue
                     #print "upload %s to remote %s" % (local_file, remote_file)
                 for name in dirs:
@@ -213,12 +211,12 @@ class ptelnet:
                     try:
                         sftp.mkdir(remote_path)
                     except Exception, e:
-                        logger(ip2 + ' upload.mkdir ' + remote_path + ' ' + str(e), 'telnet')
+                        output(ip2 + ' upload.mkdir ' + remote_path + ' ' + str(e), log_type='telnet')
                         continue
 
             t.close()
         except Exception, e:
-            logger((ip2, 'upload', e), 'telnet')
+            output((ip2, 'upload', e), log_type='telnet')
 
     # pem key文件连接
     @staticmethod

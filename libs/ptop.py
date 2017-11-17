@@ -15,7 +15,6 @@ from common.common import *
 class ptop:
 
     def __init__(self):
-        self.logfile = '%s/ptop.log' % PATH_CONFIG["log_path"]
         self.taskList = []
         pass
 
@@ -25,11 +24,9 @@ class ptop:
     def script_status(self):
         for h in SLAVE_NODE:
             ip2 = h["ip"]
-            conn = singleton.getinstance('mysql', 'core.db.mysql').conn(DB_CONFIG['ga_center']['host'], DB_CONFIG['ga_center']['user'], DB_CONFIG['ga_center']['password'], DB_CONFIG['ga_center']['db'], DB_CONFIG['ga_center']['port'])
-            ssh_info = conn.query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
-            conn.close()
+            ssh_info = sysConnMysql().query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
             if not ssh_info or not isinstance(ssh_info, type({})):
-                logger('%s has not been config in db' % ip2, 'top')
+                output('%s has not been config in db' % ip2, log_type='top')
                 continue
             if ssh_info['password'][-4:] == '.pem':
                 user = ssh_info['user']
