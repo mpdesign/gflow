@@ -18,8 +18,6 @@ import socket
 #获取当前机器ip eth=3 取全部IP eth=0 取当前IP
 # ---------------------
 def ipaddress(eth=3):
-    if DEBUG_MODE > 0:
-        return [i['ip'] for i in SLAVE_NODE]
     try:
         ips = socket.gethostbyname(socket.gethostname()).strip()
         if ips[0:len(LAN_IP_PREFIX)] == LAN_IP_PREFIX:
