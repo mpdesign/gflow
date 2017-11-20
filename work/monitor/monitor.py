@@ -16,6 +16,6 @@ class monitorJob(workInterface):
     def __init__(self):
         workInterface.__init__(self)
         self.registerTask = [
-            'createDb'
+            'createDb',
             'alterTable'
         ]

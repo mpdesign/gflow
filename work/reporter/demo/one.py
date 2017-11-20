@@ -7,7 +7,7 @@ class oneTask(demoJob):
 
     def beforeExecute(self):
         self.sleepExecute = 300
-        self.waiteForTask = 'reporter.demo2.two'
+        # self.waiteForTask = 'reporter.demo2.two'
         # self.ifDoResultSets = True
 
      # 自定义任务列表

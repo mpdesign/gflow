@@ -72,14 +72,14 @@ def switchAction(params):
             output('Job is null')
         else:
             actions.get(params["action"])(params)
+        logFile = "%s/%s/%s/%s" % (PATH_CONFIG['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
+        output('LogFile Dir: ' + logFile)
     else:
         bin_file = "%s/bin/%s.py" % (PATH_CONFIG['project_path'], params["action"])
         if not singleton.getinstance('pfile').isfile(bin_file):
             output('Bin %s is not valid' % params["action"])
         else:
             importBin(params["action"], params)
-    logFile = "%s/%s/%s/%s" % (PATH_CONFIG['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
-    output('LogFile Dir: ' + logFile)
 
 
 def Run(params=None):

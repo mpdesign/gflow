@@ -12,7 +12,7 @@
 from monitor import *
 
 
-class alterTableJob(monitorJob):
+class alterTableTask(monitorJob):
 
     def beforeExecute(self):
         self.breakExecute = True
@@ -24,8 +24,6 @@ class alterTableJob(monitorJob):
         gs = self.assignTask(byserver=False)
         for g in gs:
             app_id = g['app_id']
-            db(db_type='ga_reporter', app_id=app_id).query("alter table r_cheat_day  add `cid` int(10) unsigned NOT NULL");
-            db(db_type='ga_reporter', app_id=app_id).query("alter table r_cheat_ip  add `cid` int(10) unsigned NOT NULL");
             # db(db_type='ga_reporter', app_id=app_id).query("alter table r_ad_summary add `v_a2` int(10) unsigned NOT NULL COMMENT '次日留存'");
             # db(db_type='ga_reporter', app_id=app_id).query("alter table r_ad_summary add `v_a7` int(10) unsigned NOT NULL COMMENT '7日留存'");
             # db(db_type='ga_reporter', app_id=app_id).query("alter table r_ad_summary add `v_a14` int(10) unsigned NOT NULL COMMENT '14日留存'");

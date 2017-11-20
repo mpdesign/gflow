@@ -25,20 +25,23 @@ class createDbTask(monitorJob):
         # 当前可分配的数据库
         ga_admin = db().query("select * from ga_db where db='ga_admin' limit 1")
         if emptyquery(ga_admin):
-            output("ga_admin db config is empty")
+            output("ga_admin db config is empty", task_name=self.__class__.__name__)
         # 创建数据库
         ga_admin['user'] = singleton.getinstance('pcode').decode(ga_admin['user']) if intval(ga_admin['user']) > 10000 else ga_admin['user']
         ga_admin['password'] = singleton.getinstance('pcode').decode(ga_admin['password']) if intval(ga_admin['password']) > 10000 else ga_admin['password']
         databases = self.conn_admin(ga_admin).query("SELECT * FROM information_schema.SCHEMATA", "all")
         if emptyquery(databases):
-            output("databases is empty")
+            output("databases is empty", task_name=self.__class__.__name__)
         existsDb = []
         for d in databases:
             existsDb.append(d["SCHEMA_NAME"])
-        dbs = db().query("select * from ga_game where game_status=0 ", "all")
+        dbs = self.games()
         if emptyquery(dbs):
-            output("has not db to be create")
+            output("has not db to be create", task_name=self.__class__.__name__)
         for d in dbs:
+            # 独立分析的游戏不自动创建数据库
+            if d['assign_node']:
+                continue
             dataName = "ga_data_%s" % d["app_id"]
             reporterName = "ga_reporter_%s" % d["app_id"]
             tagName = "ga_tag_%s" % d["app_id"]
@@ -51,10 +54,6 @@ class createDbTask(monitorJob):
                 self.grantDb(tagName, d["app_id"], 'ga_tag', ga_admin)
             if configName not in existsDb:
                 self.grantDb(configName, d["app_id"], 'ga_config', ga_admin)
-
-        # 关闭mysql
-        db().close()
-        self.conn_admin(ga_admin).close()
 
     def grantDb(self, dName, app_id, dType, ga_admin):
         # 创建数据库

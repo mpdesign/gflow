@@ -34,7 +34,7 @@ class ptelnet:
         sshPool.parallel_for_complete().stop()
         for h in kwargs["host"]:
             ip2 = h["ip"]
-            ssh_info = sysConnMysql().query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
+            ssh_info = db().query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
             if not ssh_info or not isinstance(ssh_info, type({})):
                 output('%s has not been config in db' % ip2, log_type='telnet')
                 continue

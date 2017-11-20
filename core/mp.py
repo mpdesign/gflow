@@ -74,7 +74,7 @@ class mp:
             # 多线程执行作业
             self.__exec_job()
         else:
-            output('Job %s has not registerTask' % self.__class__.__name__)
+            output('Job %s has not registerTask' % self.jobName)
 
     # 多线程执行当前作业下的所有注册任务
     def __exec_job(self):
@@ -90,6 +90,7 @@ class mp:
             if not newtask:
                 continue
             # breakExecute不加入监听队列
+            newtask.beforeExecute()
             if not newtask.breakExecute:
                 work_num += 1
             taskPool.add(self.__sub_exec_task, newtask)
@@ -97,19 +98,19 @@ class mp:
         if work_num == 0:
             while taskPool and taskPool.aliveWorkers() > 0:
                 time.sleep(3)
-            output('作业 [%s] 已完成，并安全退出进程' % self.taskName, log_type='run')
+            output('作业 [%s] 已完成，并安全退出进程' % self.jobName, log_type='run')
         else:
             if "d" in argv_cli["dicts"].keys() and argv_cli["dicts"]["d"]:
                 while taskPool and taskPool.aliveWorkers() > 0:
                     time.sleep(3)
-                output('作业 [%s] 已重跑完成，并安全退出进程' % self.taskName, log_type='run')
+                output('作业 [%s] 已重跑完成，并安全退出进程' % self.jobName, log_type='run')
             else:
                 while taskPool and taskPool.aliveWorkers() >= work_num:
                     time.sleep(60)
-                notice_me('作业 [%s] 进程有子任务异常退出，请复查' % self.taskName)
+                notice_me('作业 [%s] 进程有子任务异常退出，请复查' % self.jobName)
                 while taskPool and taskPool.aliveWorkers() > 0:
                     time.sleep(60)
-                notice_me('作业 [%s] 进程全部进程异常退出，请复查' % self.taskName)
+                notice_me('作业 [%s] 进程全部进程异常退出，请复查' % self.jobName)
         sys.exit(0)
 
     # 执行子任务
@@ -204,6 +205,7 @@ class mp:
         else:
             output('date range error', task_name=self.taskName)
             return None
+        self.inspect(data={'executeStatus': 'startReExecute'})
         while True:
             self.beforeExecute()
             if date_start_time > date_end_time:
@@ -233,8 +235,8 @@ class mp:
                 break
             time.sleep(0.3)
         output('reExecute complete', task_name=self.taskName, log_type='run')
+        self.inspect(data={'executeStatus': 'completeReExecute'})
         # 重跑结束，自动退出
-
 
     # 多线程执行分配到的业务
     def mutiThreadExecute(self):
@@ -290,6 +292,7 @@ class mp:
         tnum = self.executeNumEachThread if self.executeNumEachThread > 0 else 10
         wnum = int(math.ceil(float(task_len)/float(tnum)))
         wnum = min(50, wnum)
+        self.inspect(data={'taskNum': task_len, 'workerNum': wnum})
         # 开辟wnum个线程
         subTaskPool = WorkerManager(wnum)
         # 并行执行，发送线程终止信号，在业务执行完毕之后终止
@@ -459,11 +462,13 @@ class mp:
             return inspects
         else:
             f = '%s/tmp/inspect/%s.%s.ins' % (PATH_CONFIG['project_path'], self.jobName, self.taskName)
-            inspects = {name: value for name, value in vars(self).items() if name not in ['_mp__mapTask', '_mp__myTask']}
+            inspects = {name: value for name, value in vars(self).items() if name not in ['_mp__mapTask', '_mp__myTask', 'resultSet', 'resultSets']}
             inspects['argv_cli'] = argv_cli
             inspects['taskTime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.curTime()))
             inspects['runTime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+            inspects['pid'] = os.getpid()
             for k in data.keys():
+                setattr(self, k, data[k])
                 inspects[k] = data[k]
             fp = open(f, 'w')
             fp.write(singleton.getinstance('pjson').dumps(inspects, indent=4))
@@ -473,6 +478,7 @@ class mp:
     def witeForComplete(self):
         if not self.waiteForTask:
             return
+        self.inspect(data={'executeStatus': 'witeForComplete'})
         # 查看日志
         i = 0
         j = 1

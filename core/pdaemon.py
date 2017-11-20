@@ -79,7 +79,6 @@ class Daemon:
 
     # atexit退出清理相关操作
     def delatexit(self, pid):
-        self.output('delatexit')
         self.ifexistspid(pid, ifdel=True)
 
     # 启动进程

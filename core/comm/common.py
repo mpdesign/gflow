@@ -85,16 +85,6 @@ def sysConnRdb():
     )
 
 
-def sysConnMysql():
-    return singleton.getinstance('mysql', 'core.db.mysql').conn(
-        DB_CONFIG['ga_center']['host'],
-        DB_CONFIG['ga_center']['user'],
-        DB_CONFIG['ga_center']['password'],
-        DB_CONFIG['ga_center']['db'],
-        DB_CONFIG['ga_center']['port']
-    )
-
-
 # 动态分发任务数据
 def distributeTaskData(data=None):
     iphost = ipaddress()
