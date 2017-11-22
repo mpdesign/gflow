@@ -7,7 +7,7 @@ Created on 2017-08-16
 from core.include import *
 
 
-def configdb(db_config_name='ga_center'):
+def configdb(db_config_name=CENTER_NAME):
     dc = DB_CONFIG[db_config_name]
     host = dc["host"]
     user = dc["user"]
@@ -18,15 +18,17 @@ def configdb(db_config_name='ga_center'):
 
 
 #db_con 全局数据库配置变量db_config
-def db(db_type='ga_center', app_id=''):
+def db(db_type=CENTER_NAME, app_id=''):
     if app_id:
         if db_type:
+            if db_type[0:len(PREFIX_NAME)] != PREFIX_NAME:
+                db_type = PREFIX_NAME + db_type
             # 未配置则查询数据库
             db_config_name = '%s_%s' % (db_type, app_id)
             # 随机更新配置
             db_rand = random.randint(1, 10)
             if db_config_name not in DB_CONFIG.keys() or db_rand < 3 :
-                sql = "select * from ga_db where app_id='%s' and db='%s' limit 1" % (app_id, db_type)
+                sql = "select * from %s where app_id='%s' and db='%s' limit 1" % (DB_TABLE_NAME, app_id, db_type)
                 game = db().query(sql)
                 if game and isinstance(game, type({})):
                     db_config_name = "%s_%s" % (game["db"], app_id)
@@ -38,7 +40,7 @@ def db(db_type='ga_center', app_id=''):
             output('Db config name error: db_type[%s] app_id[%s] ' % (db_type, app_id))
             return
     elif db_type not in DB_CONFIG.keys():
-        db_config_name = 'ga_center'
+        db_config_name = CENTER_NAME
     else:
         db_config_name = db_type
     host, user, passwd, defaultdb, port = configdb(db_config_name)
@@ -49,6 +51,8 @@ def db(db_type='ga_center', app_id=''):
 def db_save(table='', data=None, conditions=None, app_id='', dbname=''):
     if not dbname:
         output('Dbname %s is none' % dbname)
+    if dbname[0:len(PREFIX_NAME)] != PREFIX_NAME:
+        dbname = PREFIX_NAME + dbname
     reslut = db(dbname, app_id).save(table=table, data=data, conditions=conditions)
     if str(reslut) == '1146' or str(reslut).find("doesn't exist") > 0:
         tableindb(table, app_id, dbname=dbname)
@@ -64,13 +68,13 @@ def db_save_data(table='', data=None, conditions=None, app_id='', check=True, ta
         return None
     # 检查最新可用表
     if check:
-        table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": 'ga_data'})
+        table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": PREFIX_NAME + 'data'})
     # 通过主键ID更新
     if conditions and len(conditions) > 0:
-        save_id = db('ga_data', app_id).find(table=table, conditions=conditions, limit='1', fields=['id'])
+        save_id = db(PREFIX_NAME + 'data', app_id).find(table=table, conditions=conditions, limit='1', fields=['id'])
         if save_id and isinstance(save_id, type({})) and 'id' in save_id.keys():
             save_id = save_id['id']
-            return db_save(table, data, {"id": save_id}, app_id, dbname='ga_data')
+            return db_save(table, data, {"id": save_id}, app_id, dbname=PREFIX_NAME + 'data')
     # 插入数据
     else:
         # 玩家ID唯一
@@ -78,28 +82,29 @@ def db_save_data(table='', data=None, conditions=None, app_id='', check=True, ta
             if not isinstance(data, type([])):
                 data = [data]
             for d in data:
-                db_save(table, d, conditions, app_id, dbname='ga_data')
+                db_save(table, d, conditions, app_id, dbname=PREFIX_NAME + 'data')
         else:
-            return db_save(table, data, conditions, app_id, dbname='ga_data')
+            return db_save(table, data, conditions, app_id, dbname=PREFIX_NAME + 'data')
+
 
 # 保存标签数据
 def db_save_tag(table='', data=None, conditions=None, app_id='', check=True, tableMaxNum=1000000):
     # 检查最新可用表
     if check:
-        table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": 'ga_tag'})
-    return db_save(table, data, conditions, app_id, dbname='ga_tag')
+        table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": PREFIX_NAME + 'tag'})
+    return db_save(table, data, conditions, app_id, dbname=PREFIX_NAME + 'tag')
 
 
 # 保存reporter数据
 def db_save_reporter(table='', data=None, conditions=None, app_id='', check=True, tableMaxNum=1000000):
     # 检查最新可用表
     if check:
-        table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": 'ga_reporter'})
-    return db_save(table, data, conditions, app_id, dbname='ga_reporter')
+        table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": PREFIX_NAME + 'reporter'})
+    return db_save(table, data, conditions, app_id, dbname=PREFIX_NAME + 'reporter')
 
 
 # 判断表是否存在，不存在则从主库拷贝
-def tableindb(table, app_id='', dbname='ga_data'):
+def tableindb(table, app_id='', dbname=PREFIX_NAME + 'data'):
     if not app_id:
         return False
     table_exits = False
@@ -112,13 +117,13 @@ def tableindb(table, app_id='', dbname='ga_data'):
                 break
     if not table_exits:
         tname = "t_%s" % table
-        table_struct = db('ga_table_template').query("SHOW CREATE TABLE %s" % tname)
+        table_struct = db(PREFIX_NAME + 'table_template').query("SHOW CREATE TABLE %s" % tname)
         create_table = table_struct['Create Table'].replace('t_', '')
         db(dbname, app_id).execute(create_table)
 
 
 # 获取分表列表 按时间升序
-def subTable(app_id, tablename='d_record', order='desc', start_day=0, end_day=0, db_type='ga_data'):
+def subTable(app_id, tablename='d_record', order='desc', start_day=0, end_day=0, db_type=PREFIX_NAME + 'data'):
     tables = db(db_type, app_id=app_id).query("SELECT * FROM information_schema.TABLES where TABLE_SCHEMA='%s_%s' and TABLE_NAME like '%s_%s'" % (db_type, app_id, tablename, '%'), "all")
     table = list()
     if not emptyquery(tables):

@@ -15,18 +15,18 @@ class workInterface(mp):
 
     @staticmethod
     def game(app_id=''):
-        game_key = "ga_game_%s" % app_id
-        g = memory(redisConfig(redis_type='ga_cache', app_id=app_id)).get(game_key, j=True)
+        game_key = "%sgame_%s" % (PREFIX_NAME, app_id)
+        g = memory(redisConfig(redis_type='cache', app_id=app_id)).get(game_key, j=True)
         if not g:
-            sql = "select * from ga_game where app_id='%s' limit 1" % app_id
+            sql = "select * from %sgame where app_id='%s' limit 1" % (PREFIX_NAME, app_id)
             g = db().query(sql)
-            memory(redisConfig(redis_type='ga_cache', app_id=app_id)).set(game_key, g, 300, j=True)
+            memory(redisConfig(redis_type='cache', app_id=app_id)).set(game_key, g, 300, j=True)
         return g
 
     @staticmethod
     def games():
-        games_key = "ga_games"
-        games = memory(redis_config_name='ga_cache').get(games_key, j=True)
+        games_key = PREFIX_NAME + "games"
+        games = memory(redis_config_name='cache').get(games_key, j=True)
         if not games:
             where_app_id = ''
             app_ids = APP_ID_RANGE.split(',')
@@ -37,21 +37,21 @@ class workInterface(mp):
                     where_app_id += " app_id <= '%s' and" % app_ids[1]
             elif len(app_ids) == 1 and intval(app_ids[0]) > 0:
                 where_app_id = " app_id = '%s' and" % app_ids[0]
-            sql = "select * from ga_game where %s game_status=0" % where_app_id
+            sql = "select * from %sgame where %s game_status=0" % (PREFIX_NAME, where_app_id)
             games = db().query(sql, "all")
             if emptyquery(games):
                 games = None
-            memory(redis_config_name='ga_cache').set(games_key, games, 300, j=True)
+            memory(redis_config_name='cache').set(games_key, games, 300, j=True)
         return games
 
     @staticmethod
     def server(app_id='', sid=''):
-        server_key = "ga_server_%s_%s" % (app_id, sid)
-        s = memory(redisConfig(redis_type='ga_cache', app_id=app_id)).get(server_key, j=True)
+        server_key = "%sserver_%s_%s" % (PREFIX_NAME, app_id, sid)
+        s = memory(redisConfig(redis_type='cache', app_id=app_id)).get(server_key, j=True)
         if not s:
-            sql = "select * from ga_server where app_id='%s' and server_id='%s' limit 1" % (app_id, sid)
+            sql = "select * from %sserver where app_id='%s' and server_id='%s' limit 1" % (PREFIX_NAME, app_id, sid)
             s = db().query(sql)
-            memory(redisConfig(redis_type='ga_cache', app_id=app_id)).set(server_key, s, 300, j=True)
+            memory(redisConfig(redis_type='cache', app_id=app_id)).set(server_key, s, 300, j=True)
         return s
 
     def servers(self, app_id=''):
@@ -59,7 +59,7 @@ class workInterface(mp):
             return []
         game_where = "app_id='%s' and" % app_id
         cur_time = self.curTime()
-        sql = "select * from ga_server where %s server_start<=%s and server_status=0" % (game_where, cur_time)
+        sql = "select * from %sserver where %s server_start<=%s and server_status=0" % (PREFIX_NAME, game_where, cur_time)
         servers = db().query(sql, "all")
         if emptyquery(servers):
             servers = None
@@ -69,12 +69,12 @@ class workInterface(mp):
     def channels(app_id=''):
         if not app_id:
             return []
-        channel_key = "ga_channels_%s" % app_id
-        channel = memory(redisConfig(redis_type='ga_cache', app_id=app_id)).get(channel_key, j=True)
+        channel_key = "%schannels_%s" % (PREFIX_NAME, app_id)
+        channel = memory(redisConfig(redis_type='cache', app_id=app_id)).get(channel_key, j=True)
         if channel:
             return channel
         game_where = "app_id='%s' and" % app_id
-        sql = "select * from ga_channel where %s ch_status=0" % game_where
+        sql = "select * from %schannel where %s ch_status=0" % (PREFIX_NAME, game_where)
         channels = db().query(sql, "all")
         channel = []
 
@@ -96,17 +96,17 @@ class workInterface(mp):
                     channel.append(ca)
 
         # 设置缓存和过期时间
-        memory(redisConfig(redis_type='ga_cache', app_id=app_id)).set(channel_key, channel, sec=30, j=True)
+        memory(redisConfig(redis_type='cache', app_id=app_id)).set(channel_key, channel, sec=30, j=True)
         return channel
 
     @staticmethod
     def channel(app_id='', channel_id=''):
-        channel_key = "ga_channel_%s_%s" % (app_id, channel_id)
-        c = memory(redisConfig(redis_type='ga_cache', app_id=app_id)).get(channel_key, j=True)
+        channel_key = "%schannel_%s_%s" % (PREFIX_NAME, app_id, channel_id)
+        c = memory(redisConfig(redis_type='cache', app_id=app_id)).get(channel_key, j=True)
         if not c:
-            sql = "select * from ga_channel where app_id='%s' and channel_id='%s' limit 1" % (app_id, channel_id)
+            sql = "select * from %schannel where app_id='%s' and channel_id='%s' limit 1" % (PREFIX_NAME, app_id, channel_id)
             c = db().query(sql)
-            memory(redisConfig(redis_type='ga_cache', app_id=app_id)).set(channel_key, c, 300, j=True)
+            memory(redisConfig(redis_type='cache', app_id=app_id)).set(channel_key, c, 300, j=True)
         return c
 
     # 分配任务,按游戏、服务器、平台分配

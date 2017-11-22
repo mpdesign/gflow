@@ -47,14 +47,18 @@ def restart(jname, tname):
 
 
 # --help
-def _help(jname):
+def _help(jname, tname):
     print "\n"
     print "description: must be running on the slave node\n"
-    print "usage: mp <action> [job] -option\n"
-    print "action: <start|stop|restart|help>\n"
-    print "option: <-l>\n"
+    print "description: must be running on the master node\n"
+    print "usage: master <action> [layer.job] -option \n"
+    print "action: <start|stop|restart>\n"
+    print "option: \n"
     print "-d int date range for rerunning , split by ',' , example 20140909,20141009\n"
     print "-t register tasker , split by ',' \n"
+    print "-g assign app_id \n"
+    print "-now not wait to start  \n"
+    print "-all run all job  \n"
     print "\n"
 
 
@@ -100,7 +104,7 @@ action = {'start': start, 'stop': stop, 'restart': restart, 'help': _help, '--he
 # 执行动作
 def switchAction(a, j, t):
     if a not in action.keys():
-        output('action is null')
+        output("action '%s' is invalid!" % a)
         sys.exit(0)
     else:
         action.get(a)(j, t)
@@ -123,6 +127,7 @@ if __name__ == '__main__':
         output("Bin path must be config path, example: %s" % PATH_CONFIG['project_path'])
         sys.exit(0)
 
+    task_name = ''
     if len(sys.argv) < 3:
         action_name = 'help'
         job_name = 'help'

@@ -29,15 +29,14 @@ class activityCallbackFailedTask(streamInterface):
 
     # 定期执行失败的回调记录
     def callbackFailed(self, app_id, table):
-        callback_list = db('ga_data', app_id).debug(mode=False, code=[1146]).query("select * from %s where callback_status=1 and callback_count<10" % table, "all")
+        callback_list = db('data', app_id).debug(mode=False, code=[1146]).query("select * from %s where callback_status=1 and callback_count<10" % table, "all")
         if emptyquery(callback_list):
             return
         for c in callback_list:
             api_url = c['callback_url']
             _id = c['id']
             _, status = self.doresult(app_id, c['channel_id'], api_url)
-            db('ga_data', app_id).execute("update %s set `callback_count`=`callback_count`+1, callback_status=%s where id=%s" % (table, status, _id))
-        db('ga_data', app_id).close()
+            db('data', app_id).execute("update %s set `callback_count`=`callback_count`+1, callback_status=%s where id=%s" % (table, status, _id))
 
     def doresult(self, app_id, channel_id, callback_url):
         channel_info = self.channel(app_id, channel_id=channel_id)

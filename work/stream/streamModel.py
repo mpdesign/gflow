@@ -59,7 +59,7 @@ def mkInsertData(row, fields):
 # 循环取数据
 def popData(gakey, schemes):
     app_id = gakey.split('_')[-1]
-    qkey = "ga_data_queue_%s" % gakey
+    qkey = "%sdata_queue_%s" % (PREFIX_NAME, gakey)
     rows_insert = {}
     i = 0
     rows_update = {}
@@ -67,9 +67,9 @@ def popData(gakey, schemes):
         try:
             # 阻塞弹出，超时30秒,如果已有数据弹出，则不等待，继续出队，否则等待30秒出队
             if i > 0:
-                r = memory(redisConfig(redis_type='ga_data', app_id=app_id)).redisInstance().lpop(qkey)
+                r = memory(redisConfig(redis_type='data', app_id=app_id)).redisInstance().lpop(qkey)
             else:
-                k, r = memory(redisConfig(redis_type='ga_data', app_id=app_id)).redisInstance().blpop(qkey, timeout=30)
+                k, r = memory(redisConfig(redis_type='data', app_id=app_id)).redisInstance().blpop(qkey, timeout=30)
         except Exception, e:
             if i > 0:
                 output(('popData', e))
@@ -146,7 +146,7 @@ def dbUpdateData(table='', data=None, conditions=None, app_id='', row={}, scheme
         return None
     #通过主键ID更新
     if conditions and len(conditions) > 0:
-        save_id = db('ga_data', app_id).find(table=table, conditions=conditions, limit='1')
+        save_id = db('data', app_id).find(table=table, conditions=conditions, limit='1')
         if save_id and isinstance(save_id, type({})) and 'id' in save_id.keys():
             # 更新等级的情况，等级必须大于历史等级
             if "level" in data.keys() and "level" in save_id.keys():
@@ -157,9 +157,9 @@ def dbUpdateData(table='', data=None, conditions=None, app_id='', row={}, scheme
                 else:
                     # 等级level升级记录 以及 上一级lastLevel玩家等级状态：游戏时长、游戏次数、虚拟币消费、购入、充值金额
                     row['update'] = 0
-                    memory(redisConfig(redis_type='ga_data', app_id=app_id)).rpush("ga_data_queue_player_level_%s" % app_id, singleton.getinstance('pjson').dumps(row))
+                    memory(redisConfig(redis_type='data', app_id=app_id)).rpush("%sdata_queue_player_level_%s" % (PREFIX_NAME, app_id), singleton.getinstance('pjson').dumps(row))
             save_id = save_id['id']
-            return db_save(table=table, data=data, app_id=app_id, conditions={"id": save_id}, dbname='ga_data')
+            return db_save(table=table, data=data, app_id=app_id, conditions={"id": save_id}, dbname='data')
         # 没有找到玩家则插入数据
         else:
             if table in ['d_player', 'd_user']:
