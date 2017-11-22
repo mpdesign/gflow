@@ -10,17 +10,21 @@
 
 import sys
 import os
-from config.config import *
+import time
+from conf import *
 import socket
+import re
+import MySQLdb
+import MySQLdb.cursors
 
 
 # ---------------------
-#获取当前机器ip eth=3 取全部IP eth=0 取当前IP
+# 获取当前机器ip eth=3 取全部IP eth=0 取当前IP
 # ---------------------
 def ipaddress(eth=3):
     try:
         ips = socket.gethostbyname(socket.gethostname()).strip()
-        if ips[0:len(LAN_IP_PREFIX)] == LAN_IP_PREFIX:
+        if re.match("^[0-9\.]+$", ips):
             if eth == 3:
                 ips = [ips, '127.0.0.1']
             return ips
@@ -88,8 +92,8 @@ argv_cli = getargvs()
 # 判断当前是否master
 def isMaster():
     iphost = ipaddress()
-    if MASTER_NODE["ip"] in iphost:
-        return MASTER_NODE["ip"]
+    if MASTER_NODE in iphost:
+        return MASTER_NODE
     return False
 
 

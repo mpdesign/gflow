@@ -13,7 +13,6 @@ from common.common import *
 
 # 拷贝项目
 def executeBin(params={}):
-    print "\n"
     if 'en' not in params["dicts"].keys() and 'de' not in params["dicts"].keys():
         print 'Please input code str, -en or -de ', "\n"
         return
@@ -21,6 +20,5 @@ def executeBin(params={}):
         print singleton.getinstance('pcode').encode(params["dicts"]['en'])
     else:
         print singleton.getinstance('pcode').decode(params["dicts"]['de'])
-    print "\n"
 
 

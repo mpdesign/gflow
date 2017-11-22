@@ -2,7 +2,7 @@
 
 
 import redis
-from core.include import *
+from core.comm.common import *
 import thread
 
 TRY_CONNECT_TIMES = 100
@@ -17,17 +17,12 @@ class redisdb:
         self.pool_key = ''
         self.conn_key = ''
         self.cursor_key = ''
-        # 连接key池
-        self.conn_keys = []
-        self.cursor_keys = []
 
     # 连接
     def conn(self, host, port, db=0):
         _key = "%s_%s_%s" % (host, port, db)
         self.pool_key = "pool_%s" % _key
         self.conn_key = "conn_%s" % _key
-        if self.cursor_key not in self.conn_keys:
-            self.conn_keys.append(self.conn_key)
         if not hasattr(redisdb, self.pool_key):
             # 单例连接池
             redisdb.poolInstance(self.pool_key, host, port, db)
@@ -90,8 +85,6 @@ class redisdb:
         except Exception, e:
             output('redis close ' + conn_key + str(e), log_type='redis')
         finally:
-            if conn_key in self.conn_keys:
-                self.conn_keys.remove(conn_key)
             del_attr(self, conn_key)
             output('redis close ' + conn_key, log_type='redis')
 

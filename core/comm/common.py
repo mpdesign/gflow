@@ -13,9 +13,10 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import os
 import time
-from config import *
+from conf import *
 from cfunc import *
 from cdate import *
+from client import *
 from singleton import *
 
 
@@ -74,15 +75,7 @@ def notice_me(message):
         singleton.getinstance('phttp').send_sms(SMS_CONFIG["to"], message)
         singleton.getinstance('phttp').send_mail(MAIL_CONFIG["to"], "", MAIL_CONFIG["name"], message)
     except Exception, e:
-        output(("notice_me: ", e, message))
-
-
-def sysConnRdb():
-    return singleton.getinstance('redisdb', 'core.db.redisdb').conn(
-        REDIS_CONFIG['sys']['host'],
-        REDIS_CONFIG['sys']['port'],
-        REDIS_CONFIG['sys']['db']
-    )
+        output(("notice_me: ", e, message), log_type='stderr')
 
 
 # 动态分发任务数据

@@ -20,7 +20,7 @@ def configdb(db_config_name='ga_center'):
 #db_con 全局数据库配置变量db_config
 def db(db_type='ga_center', app_id=''):
     if app_id:
-        if db_type == 'ga_data' or db_type == 'ga_reporter':
+        if db_type:
             # 未配置则查询数据库
             db_config_name = '%s_%s' % (db_type, app_id)
             # 随机更新配置

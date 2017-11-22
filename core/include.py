@@ -16,3 +16,22 @@ from db.redisdb import *
 from mp import *
 from pdaemon import *
 from worker import *
+
+
+def sysConnMysql():
+    return singleton.getinstance('mysql', 'core.db.mysql').conn(
+        DEFAULT_DB['host'],
+        DEFAULT_DB['user'],
+        DEFAULT_DB['password'],
+        DEFAULT_DB['db'],
+        DEFAULT_DB['port']
+    )
+
+
+def sysConnRdb():
+    return singleton.getinstance('redisdb', 'core.db.redisdb').conn(
+        DEFAULT_REDIS['host'],
+        DEFAULT_REDIS['port'],
+        DEFAULT_REDIS['db']
+    )
+

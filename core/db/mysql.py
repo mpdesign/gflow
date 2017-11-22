@@ -6,7 +6,7 @@ Created on 2015-03-24
 import MySQLdb
 import MySQLdb.cursors
 from DBUtils.PooledDB import PooledDB
-from core.include import *
+from core.comm.common import *
 
 
 # 最大连接数
@@ -26,19 +26,12 @@ class mysql:
         self.pool_key = ''
         self.conn_key = ''
         self.cursor_key = ''
-        # 连接key池
-        self.conn_keys = []
-        self.cursor_keys = []
 
     def conn(self, host='', user='', passwd='', defaultdb='', port=3306):
         _key = "%s_%s_%s_%s" % (host, user, port, defaultdb)
         self.pool_key = "pool_%s" % _key
         self.conn_key = "conn_%s" % _key
         self.cursor_key = "cursor_%s" % _key
-        if self.cursor_key not in self.conn_keys:
-            self.conn_keys.append(self.conn_key)
-        if self.cursor_key not in self.cursor_keys:
-            self.cursor_keys.append(self.cursor_key)
         if not hasattr(mysql, self.pool_key):
             # 连接池实例
             mysql.poolInstance(self.pool_key, host, user, passwd, defaultdb, port)
@@ -93,7 +86,6 @@ class mysql:
             sys.exit(0)
 
         return get_attr(self, self.conn_key)
-
 
     # sql语句操作
     def execute(self, sqltext, args=None, many=False):

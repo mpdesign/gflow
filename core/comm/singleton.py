@@ -9,6 +9,8 @@
 # -----------------------------------
 
 import threading
+import os
+from conf import *
 
 
 class singleton(object):
@@ -26,6 +28,8 @@ class singleton(object):
         if cls_id not in singleton.__singleton:
             if not package:
                 package = "libs.%s" % cls
+                if not os.path.isfile('%s/%s.py' % (PATH_CONFIG['project_path'], package.replace('.', '/'))):
+                    package = "core.%s" % package
             exec("from %s import * " % package)
             cls_obj = eval(cls)
             singleton.__singleton[cls_id] = cls_obj()

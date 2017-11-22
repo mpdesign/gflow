@@ -21,7 +21,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from config import config
+from conf import config
 
 
 # http 操作类

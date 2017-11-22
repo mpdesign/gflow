@@ -15,18 +15,17 @@ import datetime
 #import cPickle
 import hashlib
 import random
-from config.config import *
 import socket
 import string
-from client import *
 from csort import *
+
 
 
 def md5(_str):
     return hashlib.md5(_str).hexdigest()
 
 
-#sql注入安全
+# sql注入安全
 def sql_escape(sql_str):
     sql_str = encode(sql_str)
     sql_str = str(sql_str)
@@ -36,7 +35,7 @@ def sql_escape(sql_str):
     return sql_str
 
 
-#编码
+# 编码
 def encode(content='', tocode='utf-8', fromcode='utf-8'):
     if isinstance(content, unicode):
         content = content.encode(tocode)
@@ -45,7 +44,7 @@ def encode(content='', tocode='utf-8', fromcode='utf-8'):
     return content
 
 
-#字典列表
+# 字典列表
 def itemDict(data, key):
     if not data or key not in data.keys():
         return ''
@@ -53,7 +52,7 @@ def itemDict(data, key):
         return data[key]
 
 
-#字典列表
+# 字典列表
 def itemList(data, key):
     if not data or key not in data:
         return ''
@@ -61,7 +60,7 @@ def itemList(data, key):
         return data[key]
 
 
-#判断变量是否存在
+# 判断变量是否存在
 def isset(var):
     if var not in locals().keys():
         return False
@@ -69,7 +68,7 @@ def isset(var):
         return True
 
 
-#判断变量是否为空
+# 判断变量是否为空
 def isempty(var):
     if var is None or var is False or len(var) < 1:
         return True
@@ -77,7 +76,7 @@ def isempty(var):
         return False
 
 
-#强制取整
+# 强制取整
 def intval(s):
     if not s:
         return 0
@@ -98,7 +97,7 @@ def intval(s):
         return i
 
 
-#强制转化浮点型
+# 强制转化浮点型
 def floatval(s):
     try:
         f = int(s)

@@ -8,7 +8,7 @@
 # description:      任务结果处理
 # -----------------------------------
 
-from comm.common import *
+from core.include import *
 
 
 class results:

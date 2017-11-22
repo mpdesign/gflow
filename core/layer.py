@@ -8,7 +8,7 @@
 # description:      批量管理作业层服务
 # -----------------------------------
 
-from comm.common import *
+from include import *
 
 
 class layer():

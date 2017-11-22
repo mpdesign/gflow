@@ -88,7 +88,7 @@ def _import(jname):
 def newDaemon(jname, tname):
     pname = jname if not tname else '%s.%s' % (jname, tname)
     dm = Daemon(pname)
-    dm.set_stdfile(stdin="stdin", stderr="stderr", stdout="stdout")
+    dm.set_stdfile(stdin="stdin.log", stderr="stderr.log", stdout="stdout.log")
     dm.pidfile = "%s/tmp/pids/%s.pid" % (PATH_CONFIG["project_path"], pname)
     return dm
 

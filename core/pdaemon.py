@@ -12,7 +12,7 @@ import os
 import time
 import atexit
 import signal
-from config.config import *
+from core.comm.conf import *
 
 
 class Daemon:

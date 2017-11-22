@@ -98,7 +98,7 @@ def Run(params=None):
 if __name__ == '__main__':
     # 只允许master节点运行该程序
     iphost = ipaddress(3)
-    if MASTER_NODE["ip"] not in iphost:
+    if MASTER_NODE not in iphost:
         output("This host is not a master node, can't run the job")
         sys.exit(0)
     if len(sys.argv) < 3:

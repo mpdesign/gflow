@@ -8,7 +8,7 @@
 # description:  查看帮助
 # -----------------------------------
 
-from config.config import *
+from core.comm.conf import *
 
 
 #--help
