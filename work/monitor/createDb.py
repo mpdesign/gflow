@@ -72,9 +72,6 @@ class createDbTask(monitorJob):
         # 分配权限
         self.conn_admin(admin).execute("GRANT all PRIVILEGES on %s.* to %s%s IDENTIFIED by '%s' with grant option" % (dName, db_user, "@'192.168.1.%'", db_pwd))
 
-        # 更新_game配置
-        db().execute("update %sgame set game_dbhost='%s',game_dbport='%s',game_dbname='%s',game_dbroot='%s',game_dbpwd='%s' where app_id='%s'" % (PREFIX_NAME, db_host, db_port, dName, db_user, db_pwd, app_id))
-
         # 插入_db配置
         db().execute("delete from %s where app_id='%s' and db='%s'" % (DB_TABLE_NAME, app_id, dType))
         db().execute("insert into %s(app_id, host, port, user, password, db) values('%s','%s','%s','%s','%s','%s') " % (DB_TABLE_NAME, app_id, db_host, db_port, db_user, db_pwd, dType))

@@ -68,6 +68,7 @@ def db_save_data(table='', data=None, conditions=None, app_id='', check=True, ta
         return None
     # 检查最新可用表
     if check:
+        # 游戏记录表， 采用ARCHIVE引擎，按年分表、按日list动态分区（判断是否存在）
         table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": PREFIX_NAME + 'data'})
     # 通过主键ID更新
     if conditions and len(conditions) > 0:
@@ -84,6 +85,7 @@ def db_save_data(table='', data=None, conditions=None, app_id='', check=True, ta
             for d in data:
                 db_save(table, d, conditions, app_id, dbname=PREFIX_NAME + 'data')
         else:
+            # 批量更新
             return db_save(table, data, conditions, app_id, dbname=PREFIX_NAME + 'data')
 
 
@@ -99,6 +101,7 @@ def db_save_tag(table='', data=None, conditions=None, app_id='', check=True, tab
 def db_save_reporter(table='', data=None, conditions=None, app_id='', check=True, tableMaxNum=1000000):
     # 检查最新可用表
     if check:
+        # 对平台字段os进行分区，预计分5区，按数据量分表
         table = checkTable(app_id, {"table": table, "tableMaxNum": tableMaxNum, "dbname": PREFIX_NAME + 'reporter'})
     return db_save(table, data, conditions, app_id, dbname=PREFIX_NAME + 'reporter')
 

@@ -10,6 +10,7 @@
 
 import threading
 import os
+import random
 from conf import *
 
 
@@ -22,9 +23,13 @@ class singleton(object):
         pass
 
     @staticmethod
-    def getinstance(cls='', package=''):
-        # 线程唯一，保证线程安全
-        cls_id = "%s_%s" % (cls, threading.currentThread().ident)
+    def getinstance(cls='', package='', label=''):
+        if label == 'rand':
+            # 随机标签，每次返回不同的实例
+            cls_id = "%s_%s_%s" % (cls, time.time(), random.randint(1, 9999))
+        else:
+            # 线程唯一，保证线程安全
+            cls_id = "%s_%s_%s" % (cls, threading.currentThread().ident, label)
         if cls_id not in singleton.__singleton:
             if not package:
                 package = "libs.%s" % cls

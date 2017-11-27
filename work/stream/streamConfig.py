@@ -50,6 +50,7 @@ schemes['player'] = {
     'update': {'set': ['level'], 'where': ['pid']}
 }
 
+
 schemes['record'] = {
     'table': 'd_record',
     'fields': ["v_time", "v_day", "channel_id", "pid", "level", "sid", "vip", "missionID", "itemID", "itemNum", "currencyID", "currencyNum", "currencyRemain", "itemRemain"],
