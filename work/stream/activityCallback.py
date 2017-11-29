@@ -51,7 +51,6 @@ class activityCallbackTask(streamInterface):
                 values.append(cdata)
             # 记录回调日志
             db_save_data(table=table, data=values, app_id=app_id)
-        db('ga_data', app_id).close()
 
     def doresult(self, app_id, channel_id, callback_url):
         channel_info = self.channel(app_id, channel_id=channel_id)

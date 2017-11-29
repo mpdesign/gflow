@@ -5,8 +5,6 @@
 # Revision:         2.0
 # Date:             2017-08-15
 # Author:           mpdesign
-# description:      报表数据层
-# frequency:        timely
 # -----------------------------------
 
 from work.__work__ import *

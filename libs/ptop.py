@@ -24,7 +24,7 @@ class ptop:
     def script_status(self):
         for h in SLAVE_NODE:
             ip2 = h["ip"]
-            ssh_info = db().query("select * from ga_db where db='ga_ssh' and host='%s' limit 1" % ip2)
+            ssh_info = db().query("select * from %s where db='slave' and host='%s' limit 1" % (DB_TABLE_NAME, ip2))
             if not ssh_info or not isinstance(ssh_info, type({})):
                 output('%s has not been config in db' % ip2, log_type='top')
                 continue
