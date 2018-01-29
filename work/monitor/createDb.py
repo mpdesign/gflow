@@ -18,34 +18,34 @@ class createDbTask(monitorJob):
         # 每分钟监听一次数据库是否已创建
         self.sleepExecute = 60
 
-    def mapTask(self):
+    def taskDataList(self):
         return DEFAULT_NODE
 
-    def execute(self, myTask=[]):
+    def execute(self, myTaskDataList=[]):
         # 当前可分配的数据库
-        admin = db().query("select * from %s where db='admin' limit 1" % DB_TABLE_NAME)
+        admin = db().query("select * from %s where db='admin' limit 1" % CONFIG_TABLE)
         if emptyquery(admin):
-            output("admin db config is empty", task_name=self.__class__.__name__)
+            output("admin db config is empty", taskName=self.__class__.__name__)
         # 创建数据库
         admin['user'] = singleton.getinstance('pcode').decode(admin['user']) if intval(admin['user']) > 10000 else admin['user']
         admin['password'] = singleton.getinstance('pcode').decode(admin['password']) if intval(admin['password']) > 10000 else admin['password']
         databases = self.conn_admin(admin).query("SELECT * FROM information_schema.SCHEMATA", "all")
         if emptyquery(databases):
-            output("databases is empty", task_name=self.__class__.__name__)
+            output("databases is empty", taskName=self.__class__.__name__)
         existsDb = []
         for d in databases:
             existsDb.append(d["SCHEMA_NAME"])
         dbs = self.games()
         if emptyquery(dbs):
-            output("has not db to be create", task_name=self.__class__.__name__)
+            output("has not db to be create", taskName=self.__class__.__name__)
         for d in dbs:
             # 独立分析的游戏不自动创建数据库
             if d['assign_node']:
                 continue
-            dataName = "%sdata_%s" % (PREFIX_NAME, d["app_id"])
-            reporterName = "%sreporter_%s" % (PREFIX_NAME, d["app_id"])
-            tagName = "%stag_%s" % (PREFIX_NAME, d["app_id"])
-            configName = "%sconfig_%s" % (PREFIX_NAME, d["app_id"])
+            dataName = "%sdata_%s" % (DB_PREFIX, d["app_id"])
+            reporterName = "%sreporter_%s" % (DB_PREFIX, d["app_id"])
+            tagName = "%stag_%s" % (DB_PREFIX, d["app_id"])
+            configName = "%sconfig_%s" % (DB_PREFIX, d["app_id"])
             if dataName not in existsDb:
                 self.grantDb(dataName, d["app_id"], 'data', admin)
             if reporterName not in existsDb:
@@ -67,14 +67,14 @@ class createDbTask(monitorJob):
         db_user = "%s_%s" % (dType, app_id) if dType != 'reporter' else 'xr_%s' % app_id
         db_pwd = randStr(20)
 
-        dType = PREFIX_NAME + dType
+        dType = DB_PREFIX + dType
 
         # 分配权限
         self.conn_admin(admin).execute("GRANT all PRIVILEGES on %s.* to %s%s IDENTIFIED by '%s' with grant option" % (dName, db_user, "@'192.168.1.%'", db_pwd))
 
         # 插入_db配置
-        db().execute("delete from %s where app_id='%s' and db='%s'" % (DB_TABLE_NAME, app_id, dType))
-        db().execute("insert into %s(app_id, host, port, user, password, db) values('%s','%s','%s','%s','%s','%s') " % (DB_TABLE_NAME, app_id, db_host, db_port, db_user, db_pwd, dType))
+        db().execute("delete from %s where app_id='%s' and db='%s'" % (CONFIG_TABLE, app_id, dType))
+        db().execute("insert into %s(app_id, host, port, user, password, db) values('%s','%s','%s','%s','%s','%s') " % (CONFIG_TABLE, app_id, db_host, db_port, db_user, db_pwd, dType))
         
     @staticmethod    
     def conn_admin(admin):

@@ -15,10 +15,10 @@ import json
 
 # redis数据库实例
 def memory(redis_config_name='data'):
-    if redis_config_name[0:len(PREFIX_NAME)] != PREFIX_NAME:
-        redis_config_name = PREFIX_NAME + redis_config_name
+    if redis_config_name[0:len(DB_PREFIX)] != DB_PREFIX:
+        redis_config_name = DB_PREFIX + redis_config_name
     if redis_config_name not in REDIS_CONFIG.keys():
-        redis_config_name = PREFIX_NAME + 'data'
+        redis_config_name = DB_PREFIX + 'data'
     rc = REDIS_CONFIG[redis_config_name]
     host = rc["host"]
     port = rc["port"]
@@ -28,7 +28,7 @@ def memory(redis_config_name='data'):
 
 # 配置redis
 def redisConfig(redis_type='data', app_id=''):
-    _type = redis_type[len(PREFIX_NAME):] if redis_type[0:len(PREFIX_NAME)] == PREFIX_NAME else redis_type
+    _type = redis_type[len(DB_PREFIX):] if redis_type[0:len(DB_PREFIX)] == DB_PREFIX else redis_type
     redis_config_name = "%s_%s" % (_type, app_id)
     if app_id:
         # 未配置则查询数据库
@@ -36,10 +36,10 @@ def redisConfig(redis_type='data', app_id=''):
         redis_rand = random.randint(1, 10)
         if redis_config_name not in REDIS_CONFIG.keys() or redis_rand < 3:
             # 缓存配置
-            redis_config_key = "%sredis_%s" % (PREFIX_NAME, redis_config_name)
+            redis_config_key = "%sredis_%s" % (DB_PREFIX, redis_config_name)
             result = memory(redis_config_name='cache').get(redis_config_key, j=True)
             if not result:
-                sql = "select * from %s where app_id='%s' and db='redis_%s' limit 1" % (DB_TABLE_NAME, app_id, _type)
+                sql = "select * from %s where app_id='%s' and db='redis_%s' limit 1" % (CONFIG_TABLE, app_id, _type)
                 result = db().query(sql)
                 if not emptyquery(result):
                     r = {"host": result["host"], "port": result["port"], "db": result["user"]}

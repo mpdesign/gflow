@@ -34,7 +34,7 @@ def queryMysql(sqltext=''):
     return res
 
 if SLAVE_NODE not in locals().keys() or not SLAVE_NODE:
-    slaves = queryMysql("select * from %s where db='slave'" % DB_TABLE_NAME)
+    slaves = queryMysql("select * from %s where db='slave'" % CONFIG_TABLE)
     if not isinstance(slaves, type((0, 1))) and isinstance(slaves[0], type({})):
         print "[%s @slave]" % time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()), 'slave node is not configured in mysql'
         sys.exit(0)

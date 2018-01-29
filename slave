@@ -22,8 +22,10 @@ def start(jname, tname):
     newjob = _import(jname)
     # Ready before start
     newjob.beforeStart()
+    newjob.beforeJob()
     # muti Execute Job
     newjob.jobExecute()
+    newjob.afterJob()
     # after start
     newjob.afterStart()
 
@@ -86,14 +88,14 @@ def _import(jname):
             except Exception, e:
                 # layer error
                 output('%s layer is not exists' % jname)
-        sys.exit(0)
+        exit(0)
 
 # 实例化daemon
 def newDaemon(jname, tname):
     pname = jname if not tname else '%s.%s' % (jname, tname)
     dm = Daemon(pname)
     dm.set_stdfile(stdin="stdin.log", stderr="stderr.log", stdout="stdout.log")
-    dm.pidfile = "%s/tmp/pids/%s.pid" % (PATH_CONFIG["project_path"], pname)
+    dm.set_pidfile(pidname=pname)
     return dm
 
 
@@ -104,8 +106,7 @@ action = {'start': start, 'stop': stop, 'restart': restart, 'help': _help, '--he
 # 执行动作
 def switchAction(a, j, t):
     if a not in action.keys():
-        output("action '%s' is invalid!" % a)
-        sys.exit(0)
+        exit("action '%s' is invalid!" % a)
     else:
         action.get(a)(j, t)
         # print '\n'
@@ -121,25 +122,22 @@ if __name__ == '__main__':
             permit = True
             break
     if not permit:
-        output("This host is not a slave node, can't run the job")
-        sys.exit(0)
+        exit("This host is not a slave node, can't run the job")
     if sys.argv[0][0:len(PATH_CONFIG['project_path'])] != PATH_CONFIG['project_path']:
-        output("Bin path must be config path, example: %s" % PATH_CONFIG['project_path'])
-        sys.exit(0)
+        exit("Bin path must be config path, example: %s" % PATH_CONFIG['project_path'])
 
-    task_name = ''
+    taskName = ''
     if len(sys.argv) < 3:
         action_name = 'help'
-        job_name = 'help'
+        jobName = 'help'
     else:
         action_name = argv_cli['argvs'][1]
-        job_name = argv_cli['argvs'][2]
-        task_name = argv_cli['dicts']['t'] if 't' in argv_cli['dicts'] else ''
-        file_2 = "%s/work/%s/%s.py" % (PATH_CONFIG['project_path'], job_name.replace('.', '/'), job_name.split('.')[-1])
+        jobName = argv_cli['argvs'][2]
+        taskName = argv_cli['dicts']['t'] if 't' in argv_cli['dicts'] else ''
+        file_2 = "%s/work/%s/%s.py" % (PATH_CONFIG['project_path'], jobName.replace('.', '/'), jobName.split('.')[-1])
         if not singleton.getinstance('pfile').isfile(file_2):
-            output('%s is a invalid job' % job_name)
-            sys.exit(0)
+            exit('%s is a invalid job' % jobName)
 
-    switchAction(action_name, job_name, task_name)
+    switchAction(action_name, jobName, taskName)
 
 

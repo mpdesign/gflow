@@ -11,6 +11,7 @@
 from comm.common import *
 from worker import *
 from results import *
+from inspect import *
 import math
 
 
@@ -25,10 +26,10 @@ class mp:
         """
         # 任务注册表
         self.registerTask = []
-        # 映射任务列表
-        self.__mapTask = []
-        # 当前节点需运算的任务
-        self.__myTask = []
+        # 总任务数据列表
+        self.__taskDataList = []
+        # 当前节点分配到的任务数据列表
+        self.__myTaskDataList = []
         # 需等待执行的任务
         self.waiteForTask = ''
 
@@ -37,10 +38,6 @@ class mp:
         """
         # 当前节点任务结果集
         self.resultSet = []
-        # 所有节点任务结果集
-        self.resultSets = []
-        # 是否处理集群结果集
-        self.ifDoResultSets = False
 
         """
          Execute配置
@@ -53,15 +50,26 @@ class mp:
         self.atExecute = ""
         # 是否可重跑, 0不可重跑、1只允许重跑一次、2允许重跑， self.atExecute 默认可重跑
         self.enableReExecute = 2
-        # execute 每个线程执行任务数myTask
-        self.executeNumEachThread = 0
+        # 每个线程处理的任务数 num node all
+        # num：处理num个任务数据 myTaskDataList/threadNum
+        # node：处理当前节点分配到的任务数据 myTaskDataList
+        # all：处理集群全部任务数据 taskDataList
+        self.excuteTaskNumBy = 10
         # 任务执行超时时间
-        self.executeTimeout = 0
-        # 任务执行状态, start ing end failed complete
-        self.executeStatus = ''
+        self.executeTimeout = None
+
+        # 可分配的节点
+        self.usedNode = []
+        # 当前节点
+        self.cur_node = curNode()
+
+        # 检查项
+        self.inspects = {}
 
         # 当前时间
         self._curTime = time.time()
+        # 启动时间
+        self.startTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
 
         pkg_job = argv_cli['argvs'][2].split('.')
         self.layerName = pkg_job[0] if len(pkg_job) > 1 else ''
@@ -74,7 +82,7 @@ class mp:
             # 多线程执行作业
             self.__exec_job()
         else:
-            output('Job %s has not registerTask' % self.jobName)
+            output('Job %s has not registerTask' % self.jobName, logType='run')
 
     # 多线程执行当前作业下的所有注册任务
     def __exec_job(self):
@@ -89,6 +97,9 @@ class mp:
             newtask = self.__import_task(t)
             if not newtask:
                 continue
+            # 删除inspect文件
+            inspect.delete('%s.%s' % (newtask.jobName, newtask.taskName))
+            newtask.inspect(data={'executeStatus': '__sub_exec_task'})
             # breakExecute不加入监听队列
             newtask.beforeExecute()
             if not newtask.breakExecute:
@@ -98,20 +109,21 @@ class mp:
         if work_num == 0:
             while taskPool and taskPool.aliveWorkers() > 0:
                 time.sleep(3)
-            output('作业 [%s] 已完成，并安全退出进程' % self.jobName, log_type='run')
+            output('The job [%s] has been completed and is safely withdrawn from the process' % self.jobName, logType='run')
         else:
             if "d" in argv_cli["dicts"].keys() and argv_cli["dicts"]["d"]:
                 while taskPool and taskPool.aliveWorkers() > 0:
                     time.sleep(3)
-                output('作业 [%s] 已重跑完成，并安全退出进程' % self.jobName, log_type='run')
+                output('The job [%s] has been rerun and is safely withdrawn from the process' % self.jobName, logType='run')
             else:
                 while taskPool and taskPool.aliveWorkers() >= work_num:
                     time.sleep(60)
-                notice_me('作业 [%s] 进程有子任务异常退出，请复查' % self.jobName)
+                notice_me('The job [%s] process has an abnormal exit of a subtask' % self.jobName)
                 while taskPool and taskPool.aliveWorkers() > 0:
                     time.sleep(60)
-                notice_me('作业 [%s] 进程全部进程异常退出，请复查' % self.jobName)
+                notice_me('The whole process of the job [%s] process exits' % self.jobName)
         sys.exit(0)
+
 
     # 执行子任务
     @staticmethod
@@ -143,27 +155,23 @@ class mp:
                     left_time = self.__atTime(self.atExecute)
                     time.sleep(left_time)
                 elif not self.breakExecute:
-                    output('Please set Execute type: atExecute, breakExecute, sleepExecute ', task_name=self.taskName)
+                    output('Please set Execute type: atExecute, breakExecute, sleepExecute ', taskName=self.taskName, logType='run')
                     break
             isnow = False
             self.curTime(curtime=time.time())
-            # 开始执行
-            output('startExecute', task_name=self.taskName, log_type='run')
-            self.inspect(data={'executeStatus': 'startExecute'})
             # 等待其他任务执行完毕
             self.witeForComplete()
             # 重新准备执行任务
             self.prepareExecute()
-            self.mutiThreadExecute()
-            # 处理结果集
-            self.doResultQueue()
-            self.afterExecute()
+            # 开始执行
+            output('startExecute', taskName=self.taskName, logType='run')
+            self.inspect(data={'executeStatus': 'startExecute'})
+            resultSets = self.mutiThreadExecute()
+            self.afterExecute(resultSets=resultSets)
             # 执行结束
             self.inspect(data={'executeStatus': 'endExecute'})
-            output('endExecute', task_name=self.taskName, log_type='run')
-            # 重置结果集
-            self.resultSet = []
-            self.resultSets = []
+            output('endExecute', taskName=self.taskName, logType='run')
+
             # 完成
             if self.breakExecute:
                 break
@@ -203,7 +211,7 @@ class mp:
             date_start_time = mktime('%s-%s-%s %s:%s:00' % (date_start[0:4], date_start[4:6], date_start[6:8], date_start[8:10], date_start[10:12]))
             date_end_time = mktime('%s-%s-%s %s:%s:00' % (date_end[0:4], date_end[4:6], date_end[6:8], date_end[8:10], date_end[10:12]))
         else:
-            output('date range error', task_name=self.taskName)
+            output('date range error', taskName=self.taskName)
             return None
         self.inspect(data={'executeStatus': 'startReExecute'})
         while True:
@@ -213,13 +221,8 @@ class mp:
             self.curTime(curtime=date_start_time)
 
             self.prepareExecute()
-            self.mutiThreadExecute()
-            # 处理结果集
-            self.doResultQueue()
-            self.afterExecute()
-            # 重置结果集
-            self.resultSet = []
-            self.resultSets = []
+            resultSets = self.mutiThreadExecute()
+            self.afterExecute(resultSets=resultSets)
 
             if timeType == 'm':
                 date_start_time = monthtime(m=1, curtime=date_start_time)
@@ -234,23 +237,22 @@ class mp:
             else:
                 break
             time.sleep(0.3)
-        output('reExecute complete', task_name=self.taskName, log_type='run')
+        output('reExecute complete', taskName=self.taskName, logType='run')
         self.inspect(data={'executeStatus': 'completeReExecute'})
         # 重跑结束，自动退出
 
     # 多线程执行分配到的业务
     def mutiThreadExecute(self):
-        if not self.__myTask:
-            output('_myTask is none', task_name=self.taskName)
+        if not self.__myTaskDataList:
+            output('myTaskDataList is none', taskName=self.taskName, logType='run')
             return
-        if not isinstance(self.__myTask, type([])):
-            _myTask = []
+        if not isinstance(self.__myTaskDataList, type([])):
+            _myTaskDataList = []
         else:
-            _myTask = self.__myTask[0:]
-            self.__myTask = []
+            _myTaskDataList = self.__myTaskDataList[0:]
 
         # 按游戏过滤
-        if len(_myTask) > 0 and isinstance(_myTask[0], type({})) and 'app_id' in _myTask[0].keys():
+        if len(_myTaskDataList) > 0 and isinstance(_myTaskDataList[0], type({})) and 'app_id' in _myTaskDataList[0].keys():
             gid = ''
             sid_strat = 0
             sid_end = 0
@@ -269,7 +271,7 @@ class mp:
                 cid = argv_cli["dicts"]["c"]
 
             tmp_task = []
-            for t in _myTask:
+            for t in _myTaskDataList:
                 g_id = str(t['app_id'])
                 if gid and g_id != gid:
                     continue
@@ -281,128 +283,125 @@ class mp:
                     continue
                 tmp_task.append(t)
 
-            _myTask = tmp_task
+            _myTaskDataList = tmp_task
+        resultSets = []
+        task_len = len(_myTaskDataList)
 
-        task_len = len(_myTask)
-        if task_len < 2:
-            self.execute(_myTask)
-            return
-        task_len = task_len if task_len > 1 else 1
-        # 每10个业务开辟一个线程
-        tnum = self.executeNumEachThread if self.executeNumEachThread > 0 else 10
-        wnum = int(math.ceil(float(task_len)/float(tnum)))
-        wnum = min(50, wnum)
-        self.inspect(data={'taskNum': task_len, 'workerNum': wnum})
-        # 开辟wnum个线程
-        subTaskPool = WorkerManager(wnum)
-        # 并行执行，发送线程终止信号，在业务执行完毕之后终止
-        subTaskPool.parallel_for_complete()
-        # 开始执行
-        timeStart = time.time()
-        # 添加wnum个任务
-        for i in range(0, wnum):
-            if i == wnum-1:
-                mt = _myTask[i*tnum:]
-            else:
-                mt = _myTask[i*tnum:i*tnum+tnum]
-            subTaskPool.add(self.execute, myTask=mt)
+        if task_len < 2 or self.excuteTaskNumBy in ['node', 'all']:
+            resultSet = self._execute(myTaskDataList=_myTaskDataList)
+            resultSets.append(resultSet)
+        else:
+            task_len = task_len if task_len > 1 else 1
+            # 每10个业务开辟一个线程
+            tnum = self.excuteTaskNumBy
+            wnum = int(math.ceil(float(task_len)/float(tnum)))
+            wnum = min(50, wnum)
+            self.inspect(data={'taskNum': task_len, 'workerNum': wnum})
+            # 开辟wnum个线程
+            subTaskPool = WorkerManager(wnum)
+            # 并行执行，发送线程终止信号，在业务执行完毕之后终止
+            subTaskPool.parallel_for_complete()
+            # 添加wnum个任务
+            for i in range(0, wnum):
+                if i == wnum-1:
+                    mt = _myTaskDataList[i*tnum:]
+                else:
+                    mt = _myTaskDataList[i*tnum:i*tnum+tnum]
+                subTaskPool.add(self._execute, myTaskDataList=mt)
+            # 1S 内监控线程是否正常运行, 只要一个线程出现异常则退出当前所有业务
+            timeSleepNum = 0
+            while int(timeSleepNum) < 1:
+                time.sleep(0.1)
+                timeSleepNum += 0.1
+                if subTaskPool.aliveWorkers() < wnum:
+                    output('A business thread in the task is not normally executed, and the whole job process has withdrawn. Please check it', taskName=self.taskName, logType='run')
+                    sys.exit(1)
 
-        # 1S 内监控线程是否正常运行, 只要一个线程出现异常则退出当前所有业务
-        timeSleepNum = 0
-        while int(timeSleepNum) < 1:
-            time.sleep(0.1)
-            timeSleepNum += 0.1
-            if subTaskPool.aliveWorkers() < wnum:
-                output('任务中某个业务线程未正常执行，整个作业进程已退出，请复查', task_name=self.taskName)
-                sys.exit(1)
+            # 获取结果集后再停止任务线程
+            subTaskPool.stop(afterwork=False)
 
-        # 执行时间最大不能超过: 指定值 or min(下次执行的计划时间点/2, 2小时)
-        executeTimeout = 0
-        if self.executeTimeout > 0:
-            executeTimeout = self.executeTimeout
-        elif self.atExecute and len(self.atExecute) > 1:
-            executeTimeout = self.__atTime(self.atExecute)/2
-        elif self.sleepExecute > 0:
-            executeTimeout = self.sleepExecute/2
+            # 等待获取所有任务结果
+            ci = ti = 0
+            for i in range(0, wnum):
+                resultSet = subTaskPool.result(rqtimeout=self.executeTimeout)
+                if isinstance(resultSet, type('')) and resultSet == 'timeout':
+                    ti += 1
+                    self.inspect(data={'workerTimeoutNum': ti})
+                    output('Task execution has gone out of time', taskName=self.taskName, logType='run')
+                    notice_me('Task[%s] execution has gone out of time' % self.taskName)
+                    # _exit(1)
+                else:
+                    ci += 1
+                    self.inspect(data={'completedWorkerNum': ci})
+                    resultSets.append(resultSet)
+        # 收集resultSet
+        if hasattr(self, 'gather'):
+            resultSets = get_attr(self, 'gather')(resultSets=resultSets)
+        resultSets = self.afterGather(resultSets=resultSets)
+        return resultSets
 
-        # 获取结果集后再停止任务线程
-        subTaskPool.stop(afterwork=False)
+    def afterGather(self, resultSets=None):
+        return resultSets
 
-        # 等待获取所有任务结果
-        for i in range(0, wnum):
-            res = subTaskPool.result(rqtimeout=executeTimeout)
-            if isinstance(res, type('')) and res == 'timeout':
-                notice_me('任务[%s]执行已超时，强制退出，请复查' % self.taskName)
-                sys.exit(1)
-            self.resultSet.append(res)
-
-        timeSleepNum = time.time() - timeStart
-        while subTaskPool.aliveWorkers():
-            # 超时，则通知但不退出
-            if timeSleepNum > executeTimeout > 0:
-                notice_me('任务[%s]已执行超过下次执行时间点的一半时间，强制退出，请复查' % self.taskName)
-                # sys.exit(1)
-            time.sleep(5)
-            timeSleepNum += 5
-            if timeSleepNum > 7200:
-                notice_me('任务[%s]执行超过2小时，强制退出，请复查' % self.taskName)
-                sys.exit(1)
-
-    # 默认任务映射表,支持ip,int,[],可重构
+    # 总任务数据列表, 用于分配任务到各个机器并行计算
     @staticmethod
-    def mapTask():
+    def taskDataList():
         return []
 
-    # 默认任务分配方法[by ip host],可重构
-    @staticmethod
-    def myTask(task_list=None, ip=None):
-        # 代码层级指定分析节点
-        if ip:
-            iphost = ipaddress()
-            if ip in iphost:
-                return True
-            else:
-                return None
-        else:
-            return distributeTaskData(task_list)
+    # 当前节点的任务数据列表
+    def myTaskDataList(self, taskDataList=None):
+        _myTaskDataList, usedNode = distributeTaskData(data=taskDataList)
+        self.usedNode = usedNode
+        return _myTaskDataList
 
-    # 用于分配任务到各个机器并行计算
+    # 执行任务前的准确
     def prepareExecute(self):
-        mapTask = self.mapTask()
-        if mapTask:
-            self.__mapTask = mapTask
-        if self.__mapTask:
-            if isinstance(self.__mapTask, type('')):
-                self.__myTask = self.myTask(ip=self.__mapTask)
-            else:
-                self.__myTask = self.myTask(self.__mapTask)
-
+        self.__myTaskDataList = self.myTaskDataList(self.taskDataList())
+        self.inspect(data={'executeStatus': 'prepareExecute'})
+        if not self.__myTaskDataList:
             # 未分配到任务则僵死
-            if not self.__myTask:
-                output('未分配到任务', task_name=self.taskName)
+            output('The assigned task data is empty', taskName=self.taskName, logType='run')
+            if self.breakExecute:
+                sys.exit(0)
+            else:
                 while True:
                     time.sleep(3600)
-                sys.exit(0)
-            # 超时时间
-            self.__executeTimeOut()
+
+        # 执行时间最大不能超过: 指定值 or min(下次执行的计划时间点/2)
+        self.__executeTimeOut()
+        if self.cur_node not in self.usedNode:
+            self.usedNode.append(self.cur_node)
 
     # default method
-    def execute(self, myTask=[]):
+    def execute(self, myTaskDataList=[]):
         pass
 
-    def __import_task(self, task_name=''):
-        if not task_name:
-            output('%s is not exists' % task_name)
+    # exec beforeMapper execute() afterMapper()
+    def _execute(self, myTaskDataList=[]):
+        if hasattr(self, 'beforeMapper'):
+            myTaskDataList = get_attr(self, 'beforeMapper')(myTaskDataList=myTaskDataList)
+        elif hasattr(self, 'beforeReducer'):
+            myTaskDataList = get_attr(self, 'beforeReducer')(myTaskDataList=myTaskDataList)
+        resultSet = self.execute(myTaskDataList=myTaskDataList)
+        if hasattr(self, 'afterMapper'):
+            resultSet = get_attr(self, 'afterMapper')(resultSet=resultSet)
+        elif hasattr(self, 'afterReducer'):
+            resultSet = get_attr(self, 'afterReducer')(resultSet=resultSet)
+        return resultSet
+
+    def __import_task(self, taskName=''):
+        if not taskName:
+            output('%s is not exists' % taskName, logType='run')
             return None
-        task_file = '%s/work/%s/%s.py' % (PATH_CONFIG['project_path'], self.jobName.replace('.', '/'), task_name)
+        task_file = '%s/work/%s/%s.py' % (PATH_CONFIG['project_path'], self.jobName.replace('.', '/'), taskName)
         if singleton.getinstance('pfile').isfile(task_file):
-            pkg_name = 'work.%s.%s' % (self.jobName, task_name)
+            pkg_name = 'work.%s.%s' % (self.jobName, taskName)
         else:
-            output('package file %s is not exists' % task_file)
+            output('package file %s is not exists' % task_file, logType='run')
             return None
         import_task = "from %s import *" % pkg_name
         exec(import_task)
-        task_class_name = '%sTask' % task_name
+        task_class_name = '%sTask' % taskName
         task_class = eval(task_class_name)
         newtask = task_class()
         return newtask
@@ -421,14 +420,11 @@ class mp:
 
     # 执行超时时间，执行时间最大不能超过: 指定值 or min(下次执行的计划时间点/2, 2小时)
     def __executeTimeOut(self):
-        executeTimeout = 0
         if self.executeTimeout > 0:
-            executeTimeout = self.executeTimeout
+            self.executeTimeout = self.executeTimeout
         elif self.atExecute and len(self.atExecute) > 1:
-            executeTimeout = self.__atTime(self.atExecute)/2
-        elif self.sleepExecute > 0:
-            executeTimeout = self.sleepExecute/2
-        self.executeTimeout = executeTimeout
+            self.executeTimeout = self.__atTime(self.atExecute)/2
+        self.executeTimeout = self.executeTimeout if self.executeTimeout > 0 else None
 
     # beforeStart method
     def beforeStart(self):
@@ -437,42 +433,82 @@ class mp:
     def afterStart(self):
         pass
 
+    # beforeJob method
+    def beforeJob(self):
+        pass
+
+    # afterJob method
+    def afterJob(self):
+        pass
+
     # beforeExecute method
+    # 执行前的静态配置，建议不作逻辑判断
     def beforeExecute(self):
         pass
 
     # afterExecute method
-    def afterExecute(self):
-        pass
+    def afterExecute(self, resultSets=None):
+        return resultSets
 
     def beforeStop(self):
-        pass
+        for t in self.registerTask:
+            self.taskName = t
+            self.inspect(data={'executeStatus': 'stopped'})
 
     def afterStop(self):
         pass
 
-    def inspect(self, t='', data={}):
-        if t:
-            f = '%s/tmp/inspect/%s.ins' % (PATH_CONFIG['project_path'], t)
-            if not singleton.getinstance('pfile').isfile(f):
-                return False
-            fp = open(f, 'r')
-            inspects = singleton.getinstance('pjson').loads(fp.read())
-            fp.close()
-            return inspects
+    # 检查运行状态
+    # overwrite 是否覆盖key
+    # append 对于list类型value是否追加方式
+    def inspect(self, data={}, k='', ipnode='', taskFullName='', overwrite=True, append=False):
+        uninspectval = ['_mp__taskDataList', '_mp__myTaskDataList', 'resultSet', 'inspects', '_curTime']
+        # 获取当前运行状态
+        #  更新self.inspects
+        if not self.inspects:
+            inspects = {name: value for name, value in vars(self).items() if name not in uninspectval}
+            self.inspects.update(inspects)
+        # 读取状态
+        if not data:
+            inspects = self.inspects
+            # 只要节点不是当前节点 或者任务不是当前任务，则从文件读取
+            if ipnode and ipnode != self.cur_node or (taskFullName and taskFullName != '%s.%s' % (self.jobName, self.taskName)):
+                inspects = inspect.read(taskFullName=taskFullName, ipnode=ipnode)
+            return inspects if not k else itemDict(inspects, k)
+        # 写入/更新状态
         else:
-            f = '%s/tmp/inspect/%s.%s.ins' % (PATH_CONFIG['project_path'], self.jobName, self.taskName)
-            inspects = {name: value for name, value in vars(self).items() if name not in ['_mp__mapTask', '_mp__myTask', 'resultSet', 'resultSets']}
-            inspects['argv_cli'] = argv_cli
-            inspects['taskTime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.curTime()))
-            inspects['runTime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-            inspects['pid'] = os.getpid()
-            for k in data.keys():
-                setattr(self, k, data[k])
-                inspects[k] = data[k]
-            fp = open(f, 'w')
-            fp.write(singleton.getinstance('pjson').dumps(inspects, indent=4))
-            fp.close()
+
+            self.inspects['argv_cli'] = argv_cli
+            self.inspects['taskTime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.curTime()))
+            self.inspects['runTime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+            self.inspects['pid'] = os.getpid()
+
+            self.inspects['usedNode'] = self.usedNode
+            self.inspects['myTaskDataList'] = str([(d['index'], itemDict(d, 'app_id')) for d in self.__myTaskDataList]) if self.__myTaskDataList else []
+
+            for _k in data:
+                if _k not in self.inspects:
+                    self.inspects[_k] = data[_k]
+                    continue
+                if overwrite:
+                    self.inspects[_k] = data[_k]
+                else:
+                    if isinstance(data[_k], type([])):
+                        if append:
+                            self.inspects[_k] += data[_k]
+                        else:
+                            for l in data[_k]:
+                                if l not in self.inspects[_k]:
+                                    self.inspects[_k].append(l)
+                    elif isinstance(data[_k], type({})):
+                        # 字典不可追加
+                        d = self.inspects[_k].copy()
+                        d.update(data[_k])
+                        self.inspects[_k] = d
+                    else:
+                        self.inspects[_k] += data[_k]
+            taskFullName = taskFullName or '%s.%s' % (self.jobName, self.taskName)
+            inspect.write(taskFullName=taskFullName, data=self.inspects)
 
     # 查看指定任务是否已完成
     def witeForComplete(self):
@@ -483,7 +519,7 @@ class mp:
         i = 0
         j = 1
         while True:
-            inspects = self.inspect(t=self.waiteForTask)
+            inspects = self.inspect(taskFullName=self.waiteForTask)
             if not inspects:
                 break
             if not inspects['atExecute']:
@@ -501,8 +537,8 @@ class mp:
                 break
             # 等待半小时将自动跳过，并发送短信通知
             if i > 1800:
-                output('等待完成的任务%s还未执行完毕，不再等待' % self.waiteForTask, task_name=self.taskName, log_type='run')
-                notice_me('等待完成的任务%s还未执行完毕，不再等待' % self.waiteForTask)
+                output('The waiting for the completion of the task[%s] is not yet completed, no longer waiting for' % self.waiteForTask, taskName=self.taskName, logType='run')
+                notice_me('The waiting for the completion of the task[%s] is not yet completed, no longer waiting for' % self.waiteForTask)
                 break
 
             if j > 3:
@@ -510,9 +546,3 @@ class mp:
             j += 1
             i += j
             time.sleep(j)
-
-    # 处理结果队列
-    def doResultQueue(self):
-        if not self.ifDoResultSets:
-            return
-        self.resultSets = results.doResultQueue(tname=self.taskName, mapTask=self.mapTask(), resultSet=self.resultSet, executeTimeout=self.executeTimeout)

@@ -45,7 +45,7 @@ class redisdb:
                 else:
                     reconn = True
             except Exception, e:
-                output('redis connInstance.ping error ' + str(e), log_type='redis')
+                output('redis connInstance.ping error ' + str(e), logType='redis')
         if reconn:
             i = 0
             while i < TRY_CONNECT_TIMES:
@@ -53,21 +53,21 @@ class redisdb:
                     setattr(self, self.conn_key, redis.StrictRedis(connection_pool=getattr(redisdb, self.pool_key)))
                     break
                 except Exception, e:
-                    output('redis Exception ' + str(e), log_type='redis')
+                    output('redis Exception ' + str(e), logType='redis')
                 j = 60 if i >= 4 else i*random.randint(1, 5)
                 # 3次连接不上则发送警告，但不终止，继续尝试连接
                 if i == 10 or i == 50:
                     _msg = "Can't connect redis %s@%s %s times" % (self.conn_key[5:], _binname, i)
-                    output(_msg, log_type='redis')
+                    output(_msg, logType='redis')
                     notice_me(_msg)
                 time.sleep(j)
                 i += 1
             # 连接不上则终止程序并发送警告
             if i >= TRY_CONNECT_TIMES:
                 _msg = "Can't connect redis %s@%s %s times" % (self.conn_key[5:], _binname, i)
-                output(_msg, log_type='redis')
+                output(_msg, logType='redis')
                 notice_me(_msg)
-                sys.exit(0)
+                _exit(0)
         return get_attr(self, self.conn_key)
 
     def ping(self):
@@ -83,10 +83,10 @@ class redisdb:
         try:
             get_attr(self, conn_key).execute_command('quit')
         except Exception, e:
-            output('redis close ' + conn_key + str(e), log_type='redis')
+            output('redis close ' + conn_key + str(e), logType='redis')
         finally:
             del_attr(self, conn_key)
-            output('redis close ' + conn_key, log_type='redis')
+            output('redis close ' + conn_key, logType='redis')
 
     def set(self, key, value, sec=False, j=False):
         if j is not False:

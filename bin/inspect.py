@@ -13,7 +13,7 @@ from common.common import *
 
 # 拷贝项目
 def executeBin(params={}):
-    inspect_path = '%s/tmp/inspect' % PATH_CONFIG['project_path']
+    inspect_path = '%s/inspect' % PATH_CONFIG['tmp_path']
     inspect_files = os.listdir(inspect_path)
     if len(params['argvs']) < 3:
         print '  '.join(inspect_files)

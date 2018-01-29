@@ -34,6 +34,10 @@ class Daemon:
         self.stdout = self.mkdirs(stdout)
         self.stderr = self.mkdirs(stderr)
 
+    def set_pidfile(self, pidname=''):
+        if pidname: self.pidfile = "%s/pids/%s.pid" % (PATH_CONFIG["tmp_path"], pidname)
+        self.mkdirs(self.pidfile)
+
     def _daemonize(self):
 
         try:
@@ -83,7 +87,6 @@ class Daemon:
 
     # 启动进程
     def start(self):
-
         self.output('Started LogFile Dir:' + self.logpath)
         self._daemonize()
 

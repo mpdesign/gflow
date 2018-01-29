@@ -17,7 +17,7 @@ from comm.common import *
 class WorkerManager:
     def __init__(self, num_of_workers=10, PT='t'):
         #未开辟新进程之前获取父进程pid
-        self.w_pf = "%s/tmp/pids/%s.pid" % (PATH_CONFIG["project_path"], os.getpid())
+        self.w_pf = "%s/pids/%s.pid" % (PATH_CONFIG["tmp_path"], os.getpid())
         self.workQueue = None
         self.resultQueue = None
         self.workers = []
@@ -75,7 +75,8 @@ class WorkerManager:
             res = self.resultQueue.get(timeout=rqtimeout)
         except Exception, e:
             return 'timeout'
-        return singleton.getinstance('pjson').loads(res)
+        return res
+        # return singleton.getinstance('pjson').loads(res)
 
     # sleeptime后终止线程
     def stop(self, _stop=True, sleeptime=0, afterwork=True):
@@ -116,20 +117,21 @@ class Processer(multiprocessing.Process):
             # stop by workQueue
             if "stop" in kwds.keys():
                 break
+
             if "loop" in kwds.keys() and kwds["loop"]:
 
                 self.whiledo(_callable, *args, **kwds)
 
             else:
                 res = self.do(_callable, *args, **kwds)
-                res = singleton.getinstance('pjson').dumps(res)
+                # res = singleton.getinstance('pjson').dumps(res)
                 self.resultQueue.put(res)
             # stop by flag
             if self.worker_stop:
                 break
 
         try:
-            sys.exit(0)
+            _exit(0)
         except Exception, e:
             pass
 
@@ -205,18 +207,19 @@ class Threader(threading.Thread):
             # stop by one workQueue exp: self.workQueue.put(("", [], {"stop": _stop}))
             if "stop" in kwds.keys():
                 break
+
             if "loop" in kwds.keys() and kwds["loop"]:
                 del kwds["loop"]
                 self.whiledo(_callable, *args, **kwds)
             else:
                 res = self.do(_callable, *args, **kwds)
-                res = singleton.getinstance('pjson').dumps(res)
+                # res = singleton.getinstance('pjson').dumps(res)
                 self.resultQueue.put(res)
             # stop by all flag exp: worker.stop()
             if self.worker_stop:
                 break
         try:
-            sys.exit(0)
+            _exit(0)
         except Exception, e:
             pass
 

@@ -14,6 +14,7 @@ class reporterLayer(workInterface):
     def __init__(self):
         workInterface.__init__(self)
         self.registerJob = [
-            'demo',
-            'demo2'
+            # 'demo',
+            # 'demo2',
+            'test'
         ]

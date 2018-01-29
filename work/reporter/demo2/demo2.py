@@ -11,9 +11,9 @@
 from work.reporter.reporter import *
 
 
-class demo2Job(workInterface):
+class demo2Job(reporterLayer):
     def __init__(self):
-        workInterface.__init__(self)
+        reporterLayer.__init__(self)
         # 任务名注册表
         self.registerTask = [
             'two'

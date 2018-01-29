@@ -17,10 +17,10 @@ class alterTableTask(monitorJob):
     def beforeExecute(self):
         self.breakExecute = True
 
-    def mapTask(self):
+    def taskDataList(self):
         return DEFAULT_NODE
 
-    def execute(self, myTask=[]):
+    def execute(self, myTaskDataList=[]):
         gs = self.assignTask(byserver=False)
         for g in gs:
             app_id = g['app_id']

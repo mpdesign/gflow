@@ -8,7 +8,8 @@
 # description:      任务结果处理
 # -----------------------------------
 
-from core.include import *
+from comm.common import *
+conn = sysConnRdb()
 
 
 class results:
@@ -46,7 +47,7 @@ class results:
 
     @staticmethod
     def __pushResultQueue(queue_key, resultSet):
-        conn = sysConnRdb()
+
         conn.redisInstance().rpush(
             queue_key,
             singleton.getinstance('pjson').dumps(resultSet)
@@ -55,7 +56,6 @@ class results:
     @staticmethod
     def __popResultQueue(queue_key, count_node, executeTimeout):
         resultSets = []
-        conn = sysConnRdb()
         for i in range(0, count_node):
             try:
                 k, res = conn.redisInstance().blpop(

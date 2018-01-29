@@ -148,3 +148,7 @@ def del_attr(obj, k):
         return delattr(obj, k)
     else:
         return None
+
+
+def _exit(n=0):
+    _exit(n)

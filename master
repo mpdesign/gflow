@@ -45,10 +45,13 @@ def restart(params):
     for p in params["dicts"]:
         ps = "%s -%s %s" % (ps, p, params["dicts"][p])
     #start job
-    cmd = "%s/slave restart %s %s" % (PATH_CONFIG["project_path"], jname, ps)
     timeout = 6 if jname == 'r2m' else 3
+    cmd = "%s/slave stop %s %s" % (PATH_CONFIG["project_path"], jname, ps)
     distribute(cmd, timeout=timeout)
-    output('All slave has restarted')
+    output('All slave has stoppped')
+    cmd = "%s/slave start %s %s" % (PATH_CONFIG["project_path"], jname, ps)
+    distribute(cmd, timeout=timeout)
+    output('All slave has started')
 
 
 def importBin(bin_name, params):
@@ -85,7 +88,7 @@ def switchAction(params):
 def Run(params=None):
     params = argv_cli if params is None else getargvs(params['argvs'])
     params["action"] = action_name
-    params["job"] = job_name
+    params["job"] = jobName
     # master唯一标识
     _r = "%s%s" % (time.time(), random.randint(0, 1000000))
     params["dicts"]['pid'] = md5(_r)[0:6]
@@ -100,7 +103,7 @@ if __name__ == '__main__':
     iphost = ipaddress(3)
     if MASTER_NODE not in iphost:
         output("This host is not a master node, can't run the job")
-        sys.exit(0)
+        exit("This host is not a master node, can't run the job")
     if len(sys.argv) < 3:
         print "DA 2.0 @mpdesign (python2.7, r1168, %s) " % time.strftime('%b %d %Y, %H:%M:%S', time.localtime())
         print 'Type "help" for more information.'
@@ -113,14 +116,13 @@ if __name__ == '__main__':
             ipt = ipt.split(' ')
             action_name = ipt[0]
             if action_name == 'exit' or action_name == 'q' or action_name == 'quit':
-                print 'bye!'
-                sys.exit(0)
+                exit('bye!')
             if len(ipt) < 2:
-                job_name = ''
+                jobName = ''
             else:
-                job_name = ipt[1]
+                jobName = ipt[1]
             sys.argv.append(action_name)
-            sys.argv.append(job_name)
+            sys.argv.append(jobName)
             iargv = dict()
             iargv['argvs'] = []
             iargv['argvs'].append(sys.argv[0])
@@ -130,7 +132,7 @@ if __name__ == '__main__':
 
     else:
         action_name = sys.argv[1]
-        job_name = sys.argv[2]
+        jobName = sys.argv[2]
         Run()
 
 

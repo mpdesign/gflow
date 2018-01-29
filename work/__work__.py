@@ -8,8 +8,8 @@ class workInterface(mp):
 
     def __init__(self):
         self.app_id = ''
-        self.dbname = ''
-        self.tablename = ''
+        self.dbName = ''
+        self.tableName = ''
         mp.__init__(self)
         pass
 

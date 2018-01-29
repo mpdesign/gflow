@@ -8,7 +8,7 @@
 # description:      批量管理作业层服务
 # -----------------------------------
 
-from include import *
+from comm.common import *
 
 
 class layer():
@@ -44,13 +44,12 @@ class layer():
         self.run('restart')
 
     def run(self, action=''):
-        print '\n'
         ps = ''
         for p in argv_cli["dicts"]:
             ps = "%s -%s %s" % (ps, p, argv_cli["dicts"][p])
         for jobName in self.layerObj.registerJob:
-            output('Job %s starting ...' % jobName)
+            output('Job %s starting ...' % jobName, logType='run')
             cmd = "%s/slave %s %s %s" % (PATH_CONFIG["project_path"], action, self.layerName + '.' + jobName, ps)
             os.system(cmd)
 
-        output('All job has %sed ' % action)
+        output('All job has %sed ' % action, logType='run')

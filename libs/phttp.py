@@ -21,14 +21,14 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-from conf import config
-
 
 # http 操作类
 class phttp:
 
     # 初始化配置信息
     def __init__(self):
+        self._mail_config = {}
+        self._sms_config = {}
         pass
 
     @staticmethod
@@ -70,17 +70,20 @@ class phttp:
         
         return r
 
+    def config_mail(self, mail_config={}):
+        self._mail_config = mail_config
+        return self
+
     #mail for python
-    @staticmethod
-    def send_mail(mails, realname='', subject='', content=''):
+    def send_mail(self, mails, realname='', subject='', content=''):
         if not isinstance(mails, type(['a'])):
             mails = mails.split(',')
         #设置服务器，用户名、口令以及邮箱的后缀
-        mail_host = config.MAIL_CONFIG["host"]
-        mail_user = config.MAIL_CONFIG["user"]
-        mail_pass = config.MAIL_CONFIG["password"]
+        mail_host = self._mail_config["host"]
+        mail_user = self._mail_config["user"]
+        mail_pass = self._mail_config["password"]
         
-        me = config.MAIL_CONFIG["name"]+"<"+mail_user+">"
+        me = self._mail_config["name"]+"<"+mail_user+">"
         msg = MIMEText(content)
         msg['Subject'] = subject
         msg['From'] = me
@@ -96,6 +99,10 @@ class phttp:
             print str(e)
             return False
 
+    def config_sms(self, sms_config={}):
+        self._sms_config = sms_config
+        return self
+
     #sms 短信发送
     def send_sms(self, phones, message='', method='qcloud'):
         if method == 'qcloud':
@@ -108,9 +115,9 @@ class phttp:
         if isinstance(phones, type(['a'])):
             phones = ",".join(phones)
         param = dict()
-        param['sdk'] = config.SMS_CONFIG["sdk"]
-        param['code'] = config.SMS_CONFIG["code"]
-        param['subcode'] = config.SMS_CONFIG["subcode"]
+        param['sdk'] = self._sms_config["sdk"]
+        param['code'] = self._sms_config["code"]
+        param['subcode'] = self._sms_config["subcode"]
         param['phones'] = phones
         param['msg'] = message
 

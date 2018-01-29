@@ -24,16 +24,12 @@ class ptop:
     def script_status(self):
         for h in SLAVE_NODE:
             ip2 = h["ip"]
-            ssh_info = db().query("select * from %s where db='slave' and host='%s' limit 1" % (DB_TABLE_NAME, ip2))
+            ssh_info = db().query("select * from %s where db='slave' and host='%s' limit 1" % (CONFIG_TABLE, ip2))
             if not ssh_info or not isinstance(ssh_info, type({})):
-                output('%s has not been config in db' % ip2, log_type='top')
+                output('%s has not been config in db' % ip2, logType='top')
                 continue
-            if ssh_info['password'][-4:] == '.pem':
-                user = ssh_info['user']
-                passwd = ssh_info['password']
-            else:
-                user = singleton.getinstance('pcode').decode(ssh_info['user'])
-                passwd = singleton.getinstance('pcode').decode(ssh_info['password'])
+            user = ssh_info['user']
+            passwd = ssh_info['password']
 
             cmds = []
             cmd = 'ps aux  | grep "%s" | grep  -v "grep"' % PATH_CONFIG["project_path"]

@@ -69,21 +69,21 @@ class mysql:
                 )
                 break
             except Exception, e:
-                output('mysql Exception ' + str(e), log_type='mysql')
+                output('mysql Exception ' + str(e), logType='mysql')
             j = 60 if i >= 4 else i*random.randint(1, 5)
             # 3次连接不上则发送警告，但不终止，继续尝试连接
             if i == 10 or i == 50:
                 _msg = "Can't connect mysql %s@%s %s times" % (self.conn_key[5:], _binname, i)
-                output(_msg, log_type='mysql')
+                output(_msg, logType='mysql')
                 notice_me(_msg)
             time.sleep(j)
             i += 1
         # 超过连接次数则终止程序并发送警告
         if i >= TRY_CONNECT_TIMES:
             _msg = "Can't connect mysql %s@%s %s times, exit" % (self.conn_key[5:], _binname, i)
-            output(_msg, log_type='mysql')
+            output(_msg, logType='mysql')
             notice_me(_msg)
-            sys.exit(0)
+            _exit(0)
 
         return get_attr(self, self.conn_key)
 
@@ -143,7 +143,7 @@ class mysql:
     # 格式化语句执行
     def save(self, table='', data=None, conditions=None):
         if not table or not data:
-            output('Table or data is None', log_type='mysql')
+            output('Table or data is None', logType='mysql')
             return None
         if isinstance(data, type([])) and len(data) > 0 and isinstance(data[0], type({})):
             # 批量插入
@@ -244,11 +244,11 @@ class mysql:
         if errorcode > 0:
             if self._debug:
                 if self._code and errorcode in self._code or not self._code:
-                    output(t + ' ' + errormsg + ' SQL: %s' % self.sqltext, log_type='mysql')
+                    output(t + ' ' + errormsg + ' SQL: %s' % self.sqltext, logType='mysql')
             elif self._code and errorcode not in self._code:
-                output(t + ' ' + errormsg + ' SQL: %s' % self.sqltext, log_type='mysql')
+                output(t + ' ' + errormsg + ' SQL: %s' % self.sqltext, logType='mysql')
             self.debug()
         else:
-            output(t + errormsg, log_type='mysql')
+            output(t + errormsg, logType='mysql')
 
         return t + errormsg

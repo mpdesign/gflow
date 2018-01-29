@@ -25,38 +25,34 @@ class ptelnet:
 
     def ssh2(self, **kwargs):
         if not kwargs["host"]:
-            output('host is null', log_type='telnet')
+            output('host is null', logType='telnet')
             return
         if not kwargs["action"]:
-            output('action is null', log_type='telnet')
+            output('action is null', logType='telnet')
             return
         sshPool = WorkerManager(len(kwargs["host"]))
         sshPool.parallel_for_complete().stop()
         for h in kwargs["host"]:
             ip2 = h["ip"]
-            ssh_info = db().query("select * from %s where db='slave' and host='%s' limit 1" % (DB_TABLE_NAME, ip2))
+            ssh_info = db().query("select * from %s where db='slave' and host='%s' limit 1" % (CONFIG_TABLE, ip2))
             if not ssh_info or not isinstance(ssh_info, type({})):
-                output('%s has not been config in db' % ip2, log_type='telnet')
+                output('%s has not been config in db' % ip2, logType='telnet')
                 continue
-            if ssh_info['password'][-4:] == '.pem':
-                user = ssh_info['user']
-                passwd = ssh_info['password']
-            else:
-                user = singleton.getinstance('pcode').decode(ssh_info['user'])
-                passwd = singleton.getinstance('pcode').decode(ssh_info['password'])
-            if not ip2 or not user or not passwd:
-                output('ip or user or passwd is null', log_type='telnet')
+            user = ssh_info['user']
+            passwd = ssh_info['password']
+            if not ip2 or not user:
+                output('ip or user or passwd is null', logType='telnet')
                 return
 
             if kwargs["action"] == 'ssh':
                 if not kwargs["command"]:
-                    output('command is null', log_type='telnet')
+                    output('command is null', logType='telnet')
                     return
                 sshPool.add(self.ssh, ip2, user, passwd, kwargs["command"])
                 # t = threading.Thread(target=self.ssh, args=(ip2, user, passwd, kwargs["command"]))
             else:
                 if not kwargs["local_dir"] or not kwargs["remote_dir"]:
-                    output('command is null', log_type='telnet')
+                    output('command is null', logType='telnet')
                     return
                 local_dir = kwargs["local_dir"]
                 remote_dir = kwargs["remote_dir"]
@@ -67,7 +63,7 @@ class ptelnet:
                     sshPool.add(self.upload, ip2, user, passwd, local_dir, remote_dir)
                     # t = threading.Thread(target=self.upload, args=(ip2, user, passwd, local_dir, remote_dir))
                 else:
-                    output('action is invalid', log_type='telnet')
+                    output('action is invalid', logType='telnet')
                     return
             # t.start()
         timeOut = 0
@@ -87,13 +83,13 @@ class ptelnet:
                     ot = self._exec_command(ssh, m)
                     outs.append(ot)
                 except Exception, e:
-                    output(ip2 + ' popen/m ' + m + str(e), log_type='telnet')
+                    output(ip2 + ' popen/m ' + m + str(e), logType='telnet')
                     continue
         else:
             try:
                 outs = self._exec_command(ssh, command)
             except Exception, e:
-                output(ip2 + ' popen ' + str(command) + str(e), log_type='telnet')
+                output(ip2 + ' popen ' + str(command) + str(e), logType='telnet')
                 pass
         ssh.close()
         return outs
@@ -106,14 +102,15 @@ class ptelnet:
             for m in command:
                 try:
                     ots = self._exec_command(ssh, m)
-                    print fmt % (ip2, '%s' % m)
-                    print '\n'.join([fmt % ('', '%s' % ot) for ot in ots['out'] if ot])
+                    if 'noout' not in argv_cli['dicts']:
+                        print fmt % (ip2, '%s' % m)
+                        print '\n'.join([fmt % ('', '%s' % ot) for ot in ots['out'] if ot])
                 except Exception, e:
-                    output(ip2 + ' ssh/m ' + m + str(e), log_type='telnet')
+                    output(ip2 + ' ssh/m ' + m + str(e), logType='telnet')
                     pass
             ssh.close()
         except Exception, e:
-            output(str(command) + ' ssh ' + str(e), log_type='telnet')
+            output(str(command) + ' ssh ' + str(e), logType='telnet')
             return
 
     def _exec_command(self, _ssh, m):
@@ -132,7 +129,7 @@ class ptelnet:
             for e in err:
                 ot["err"].append(e.strip())
         except Exception, e:
-            output(m + ' _exec_command ' + str(e), log_type='telnet')
+            output(m + ' _exec_command ' + str(e), logType='telnet')
             pass
         return ot
 
@@ -156,12 +153,12 @@ class ptelnet:
         if last_str == '/':
             remote_dir = remote_dir[0:-1]
         if not local_dir or not remote_dir:
-            output('local_dir or remote_dir is null ', log_type='telnet')
+            output('local_dir or remote_dir is null ', logType='telnet')
             return None
         # master节点不上传
         iphost = ipaddress()
         if ip2 in iphost:
-            output('The files of master node %s is not alowed to be covered ' % ip2, log_type='telnet')
+            output('The files of master node %s is not alowed to be covered ' % ip2, logType='telnet')
             return None
         try:
             paramiko.util.log_to_file(self.logfile)
@@ -201,7 +198,7 @@ class ptelnet:
                             if filespath == 'slave':
                                 sftp.chmod(remote_file, 0777)
                         except Exception, e:
-                            output(ip2 + ' upload.put.mkdir ' + local_file + ' ' + remote_file + ' ' + str(e), log_type='telnet')
+                            output(ip2 + ' upload.put.mkdir ' + local_file + ' ' + remote_file + ' ' + str(e), logType='telnet')
                             continue
                     #print "upload %s to remote %s" % (local_file, remote_file)
                 for name in dirs:
@@ -211,33 +208,49 @@ class ptelnet:
                     try:
                         sftp.mkdir(remote_path)
                     except Exception, e:
-                        output(ip2 + ' upload.mkdir ' + remote_path + ' ' + str(e), log_type='telnet')
+                        output(ip2 + ' upload.mkdir ' + remote_path + ' ' + str(e), logType='telnet')
                         continue
 
             t.close()
         except Exception, e:
-            output((ip2, 'upload', e), log_type='telnet')
+            output((ip2, 'upload', e), logType='telnet')
 
     # pem key文件连接
     @staticmethod
     def connect2(host, username, passwd, ctype=''):
+        if not passwd:
+            if username == 'root':
+                pkfile = '/root/.ssh/id_rsa'
+            else:
+                pkfile = '/home/%s/.ssh/id_rsa' % username
+            mykey = paramiko.RSAKey.from_private_key_file(pkfile)
+        elif passwd[-4:] == '.pem':
+            pkfile = os.path.expanduser(passwd)
+            mykey = paramiko.RSAKey.from_private_key_file(pkfile)
         if ctype == 'ftp':
             t = paramiko.Transport((host, 22))
             if passwd[-4:] == '.pem':
-                privatekeyfile = os.path.expanduser(passwd)
-                mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
                 t.connect(username=username, pkey=mykey)
-            else:
+            elif passwd:
+                username = singleton.getinstance('pcode').decode(username)
+                passwd = singleton.getinstance('pcode').decode(passwd)
                 t.connect(username=username, password=passwd)
+            else:
+                t.connect(username=username, pkey=mykey)
             return t
         else:
             ssh = paramiko.SSHClient()
+            #  首次登录自动yes
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             if passwd[-4:] == '.pem':
-                privatekeyfile = os.path.expanduser(passwd)
-                mykey = paramiko.RSAKey.from_private_key_file(privatekeyfile)
                 ssh.connect(host, username=username, pkey=mykey, timeout=5)
-            else:
+            elif passwd:
+                username = singleton.getinstance('pcode').decode(username)
+                passwd = singleton.getinstance('pcode').decode(passwd)
                 ssh.connect(host, 22, username, passwd, timeout=5)
+            else:
+                ssh.load_system_host_keys()
+                # 无密码登录
+                ssh.connect(host, username=username, pkey=mykey, timeout=5)
             return ssh
 
