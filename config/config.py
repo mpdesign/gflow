@@ -23,13 +23,10 @@ GAME_TABLE_NAME = 'xy_game'
 # 数据库配置
 DB_CONFIG = {
     "xy_center": {
-        "host": "192.168.1.186", "user": "public", "password": "public", "db": "xy_center", "port": 3306
+        "host": "", "user": "", "password": "", "db": "", "port": 3306
     },
     "xy_table_template": {
-         "host": "192.168.1.186", "user": "public", "password": "public", "db": "xy_table_template", "port": 3306
-    },
-    "xy_adtrack": {
-        "host": "192.168.1.186", "user": "public", "password": "public", "db": "xy_adtrack", "port": 3306
+        "host": "", "user": "", "password": "", "db": "", "port": 3306
     }
 }
 
@@ -52,10 +49,6 @@ REDIS_CONFIG = {
     }
 }
 
-# maxminddb路径配置
-MAXMIND_DB_CONFIG = {
-    "path_city": PATH_CONFIG["project_path"]+'/exts/GeoLite2-City.mmdb'
-}
 DEFAULT_DB = DB_CONFIG['xy_center']
 DEFAULT_REDIS = REDIS_CONFIG['xy_data']
 
@@ -66,17 +59,7 @@ HDFS_CONFIG = {
     "port": 9000
 }
 
-# 短信配置
-SMS_CONFIG = {"sdk": "13779953612", "code": "Youli888888", "subcode": "2278", "to": ["15880215195", "18850580928"]}
 
-# 邮箱配置
-MAIL_CONFIG = {"host": "smtp.exmail.qq.com",
-               "user": "service@qyy.com",
-               "password": "Qyy2012)@!$",
-               "name": "数据中心警报",
-               "to": ["84086365@qq.com"]}
-
-# ip127.0.0.1 is not allowed to be set to the master or slave node
 # 默认运算节点
 DEFAULT_NODE = '172.18.0.101'
 
