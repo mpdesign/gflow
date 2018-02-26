@@ -69,70 +69,93 @@ actions = {'start': start, 'stop': stop, 'restart': restart}
 
 # 执行动作
 def switchAction(params):
-
-    if params["action"] in actions.keys():
-        if "job" not in params.keys() or not params["job"]:
-            output('Job is null')
-        else:
-            actions.get(params["action"])(params)
-        logFile = "%s/%s/%s/%s" % (PATH_CONFIG['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
-        output('LogFile Dir: ' + logFile)
+    action_name = params['argvs'][1]
+    job_name = params['argvs'][2]
+    if not job_name:
+        output('Job is null')
     else:
-        bin_file = "%s/bin/%s.py" % (PATH_CONFIG['project_path'], params["action"])
-        if not singleton.getinstance('pfile').isfile(bin_file):
-            output('Bin %s is not valid' % params["action"])
-        else:
-            importBin(params["action"], params)
-
-
-def Run(params=None):
-    params = argv_cli if params is None else getargvs(params['argvs'])
-    params["action"] = action_name
-    params["job"] = jobName
-    # master唯一标识
-    _r = "%s%s" % (time.time(), random.randint(0, 1000000))
-    params["dicts"]['pid'] = md5(_r)[0:6]
-    if "id" in params["dicts"].keys():
-        del params["dicts"]['id']
-
-    switchAction(params)
+        actions.get(action_name)(params)
+    logFile = "%s/%s/%s/%s" % (PATH_CONFIG['log_path'], time.strftime('%Y', time.localtime()), time.strftime('%m', time.localtime()), time.strftime('%d', time.localtime()))
+    output('LogFile Dir: ' + logFile)
 
 
 if __name__ == '__main__':
     # 只允许master节点运行该程序
-    iphost = ipaddress(3)
-    if MASTER_NODE not in iphost:
-        output("This host is not a master node, can't run the job")
-        exit("This host is not a master node, can't run the job")
+    if not isMaster():
+        output("Current node is not master")
+        sys.exit(0)
     if len(sys.argv) < 3:
-        print "DA 2.0 @mpdesign (python2.7, r1168, %s) " % time.strftime('%b %d %Y, %H:%M:%S', time.localtime())
+        print "gflow 2.0 @mpdesign (python2.7, r1168, %s) " % time.strftime('%b %d %Y, %H:%M:%S', time.localtime())
         print 'Type "help" for more information.'
+        print '    ______    ____________      _________                 __'
+        print '   / ____/   / _______,/ /     / ___,\ \/                / /'
+        print '  / /       / / ____  / /     / /    /\ \     _____     / /'
+        print ' / /   ___ / _____/  / /     / /    / /\ \   / / \ \   / /'
+        print ' \ \____/ / /       / /_____/ /____/ /  \ \_/ /   \ \_/ /'
+        print '  \_____,/_/       /______,/________/    \___/     \___/ '
+        print ''
         if len(sys.argv) == 2:
             del sys.argv[1]
+        action_name = ''
+        catalog_name = ''
+        schema_name = ''
         while True:
-            ipt = raw_input(">>> ").strip(' ')
+            input_action = ':' + action_name if action_name else ''
+            input_schema = ':' + schema_name if schema_name else ''
+            input_catalog = ':' + catalog_name if catalog_name else ''
+            ipt = raw_input("gflow%s%s%s > " % (input_action, input_catalog, input_schema)).strip(' ')
             if not ipt:
                 continue
             ipt = ipt.split(' ')
-            action_name = ipt[0]
-            if action_name == 'exit' or action_name == 'q' or action_name == 'quit':
+            if ipt[0] == 'exit':
                 exit('bye!')
-            if len(ipt) < 2:
-                jobName = ''
+            if ipt[0] == 'q' or ipt[0] == 'quit':
+                if schema_name:
+                    schema_name = ''
+                elif catalog_name:
+                    catalog_name = ''
+                elif action_name:
+                    action_name = ''
+                else:
+                    exit('bye!')
+                continue
+            elif not action_name:
+                action_name = ipt[0]
+                continue
+            # catalog connector
+            elif ipt[0] == 'catalog':
+                if len(ipt) < 2:
+                    print 'please input catalog [mysql|hive]'
+                    continue
+                catalog_name = ipt[1].rstrip(';')
+                continue
+            # use schema
+            elif ipt[0] == 'use':
+                if len(ipt) < 2:
+                    print 'please input schema'
+                    continue
+                schema_name = ipt[1].rstrip(';')
+                continue
+            if catalog_name:
+                ipt.append('-catalog')
+                ipt.append(catalog_name)
+            if schema_name:
+                ipt.append('-schema')
+                ipt.append(schema_name)
+            params = [i.strip() for i in ipt]
+            params = getargvs(params)
+            bin_file = "%s/bin/%s.py" % (PATH_CONFIG['project_path'], action_name)
+            if not singleton.getinstance('pfile').isfile(bin_file):
+                output('Bin %s is not valid' % action_name)
             else:
-                jobName = ipt[1]
-            sys.argv.append(action_name)
-            sys.argv.append(jobName)
-            iargv = dict()
-            iargv['argvs'] = []
-            iargv['argvs'].append(sys.argv[0])
-            for i in ipt:
-                iargv['argvs'].append(i.strip('\'"'))
-            Run(iargv)
+                importBin(action_name, params)
 
     else:
-        action_name = sys.argv[1]
-        jobName = sys.argv[2]
-        Run()
+        params = argv_cli
+        # master唯一标识
+        _r = "%s%s" % (time.time(), random.randint(0, 1000000))
+        params["dicts"]['pid'] = md5(_r)[0:6]
+        if "id" in params["dicts"].keys():
+            del params["dicts"]['id']
 
-
+        switchAction(params)
