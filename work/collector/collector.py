@@ -8,12 +8,12 @@
 # description:      数据采集器
 # -----------------------------------
 
-from work.__work__ import *
+from common.common import *
 
 
-class collectorLayer(workInterface):
+class collectorLayer(mp):
     def __init__(self):
-        workInterface.__init__(self)
+        mp.__init__(self)
         self.registerJob = [
             'tail'
         ]

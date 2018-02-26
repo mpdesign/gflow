@@ -102,6 +102,8 @@ class phdfs:
                     i += 1
                     output(('phdfs.read has retried %s, max retries[%s]' % (i, max_retries)) + str(e), logType='hdfs')
                     continue
+                if str(e).find('not found') >= 0:
+                    return None
                 else:
                     # 抛出异常，供外部使用
                     raise e, None, sys.exc_info()[2]
@@ -143,6 +145,23 @@ class phdfs:
     # 删除文件或文件夹
     def delete(self, filepath='', recursive=True):
         self.client().delete(filepath, recursive=recursive)
+        return self
+
+    # 上传文件
+    def upload(self, hdfs_path='', local_path='', overwrite=True, max_retries=3, n_threads=1):
+        # 尝试连接
+        i = 0
+        while True:
+            try:
+                self.client().upload(hdfs_path, local_path, overwrite=overwrite, n_threads=n_threads)
+                break
+            except Exception, e:
+                time.sleep(random.randint(1, 10))
+                i += 1
+                output(('phdfs.upload has retried %s, max retries[%s]' % (i, max_retries)) + str(e), logType='hdfs')
+                if i >= max_retries:
+                    # 抛出异常，供外部使用
+                    raise e, None, sys.exc_info()[2]
         return self
 
     # 查找最后不完整的行

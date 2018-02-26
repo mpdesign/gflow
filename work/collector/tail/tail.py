@@ -8,12 +8,12 @@
 # description:  tail作业
 # -----------------------------------
 
-from work.reporter.reporter import *
+from work.collector.collector import *
 
 
-class tailJob(reporterLayer):
+class tailJob(collectorLayer):
     def __init__(self):
-        reporterLayer.__init__(self)
+        collectorLayer.__init__(self)
         # 任务名注册表
         self.registerTask = [
             'dc'
