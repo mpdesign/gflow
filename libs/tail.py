@@ -12,40 +12,71 @@ from core.worker import *
 class tail(object):
     
     def __init__(self):
-
-        self.callback = sys.stdout.write
-        self.tmpFolder = PATH_CONFIG['tmp_path'] + '/tail'
+        self.callback_data=None
+        # 本次启动采集的文件随机数
+        self.file_rand_id = random.randint(1, 10000)
         self.config = {}
         self.conf()
-        self.atSink = ['H5', 'd1']
 
-    def conf(self, buffer_size=100000, batch_size=100, batch_interval=10, sourceFolder='/logs/nginx', sinkFolder='/gflow/logs', encoding='utf8', compress=False):
-        # 每一百行回写到hdfs
+    def conf(self,
+             # 每次采集字节数
+             chunk_size=1,
+             # 管道队列长度
+             buffer_size=1000000,
+             # 每达到一百行写入sink
+             batch_size=100,
+             # 超过10秒没有tail到数据，写入sink
+             batch_interval=10,
+             # 日志采集源目录
+             sourceFile='/logs/nginx',
+             # 写入目录
+             sinkFolder='/gflow/logs',
+             # 临时目录
+             tmpFolder=PATH_CONFIG['tmp_path'] + '/tail',
+             encoding='utf8',
+             # sink to hdfs定时策略[每小时5分, 每天凌晨1点]
+             atSink=['H5', 'd1'],
+             channelPoolLen=1,
+             sinkPoolLen=1,
+             uploadPoolLen=1,
+             # 是否压缩后sink
+             compress=False):
         self.config = {
+            'chunk_size': chunk_size,
             'buffer_size': buffer_size,
             'batch_interval': batch_interval,
             'batch_size': batch_size,
             # 文件夹：/name/Y/m/d/
-            'sourceFolder': sourceFolder.rstrip('/'),
+            'sourceFile': sourceFile.rstrip('/'),
             'sinkFolder': sinkFolder.rstrip('/'),
+            'tmpFolder': tmpFolder.rstrip('/'),
             'encoding': encoding,
-            'compress': compress
+            'compress': compress,
+            'atSink': atSink,
+            'channelPoolLen': channelPoolLen,
+            'sinkPoolLen': sinkPoolLen,
+            'uploadPoolLen': uploadPoolLen
         }
+        return self
+
+    def register_callback(self, callback='', data=None):
+        self.callback_data = data
+        tail.callback = staticmethod(callback)
         return self
 
     def check_file_validity(self):
         """ Check whether the a given file exists, readable and is a file """
         tail_files = []
 
-        if singleton.getinstance('pfile').isfile(self.config['sourceFolder']) or self.config['sourceFolder'].split('/')[-1].find('*'):
-            folder = os.path.dirname(self.config['sourceFolder'])
-            pattern = os.path.basename(self.config['sourceFolder'])
+        if singleton.getinstance('pfile').isfile(self.config['sourceFile']) or self.config['sourceFile'].split('/')[-1].find('*'):
+            folder = os.path.dirname(self.config['sourceFile'])
+            pattern = os.path.basename(self.config['sourceFile'])
         else:
-            folder = self.config['sourceFolder']
+            folder = self.config['sourceFile']
             pattern = '*'
 
-        if not os.access(self.config['sourceFolder'], os.R_OK):
-            raise TailError("File '%s' not readable" % self.config['sourceFolder'])
+        if not os.access(self.config['sourceFile'], os.R_OK):
+            raise TailError("File '%s' not readable" % self.config['sourceFile'])
 
         for root, dirs, files in os.walk(folder):
             if files:
@@ -67,7 +98,7 @@ class tail(object):
                         fp.close()
                     tail_files.append((tail_file, tail_pos))
         if not tail_files:
-            raise TailError('sourceFolder %s has not any file' % self.config['sourceFolder'])
+            raise TailError('sourceFile %s has not any file' % self.config['sourceFile'])
 
         return tail_files
 
@@ -91,13 +122,13 @@ class tail(object):
         sourcePool.stop(afterwork=False)
 
         # channel
-        channelPool = WorkerManager(1)
+        channelPool = WorkerManager(self.config['channelPoolLen'])
         channelPool.parallel_for_complete()
         channelPool.add(self.channel, inputQueue=channelQueue, outputQueue=sinkQueue)
         channelPool.stop(afterwork=False)
 
         # sink
-        sinkPool = WorkerManager(1)
+        sinkPool = WorkerManager(self.config['sinkPoolLen'])
         sinkPool.parallel_for_complete()
         sinkPool.add(self.sink, inputQueue=sinkQueue)
         sinkPool.stop(afterwork=False)
@@ -108,41 +139,37 @@ class tail(object):
         # 每小时上传至hdfs
         hdfsPool.add(self.sinkHourFile)
         # 每天合并压缩上传至hdfs
-        hdfsPool.add(self.mergeHourFile)
+        hdfsPool.add(self.mergeFileHour2Day)
         hdfsPool.stop(afterwork=False)
 
         while hdfsPool.aliveWorkers():
             time.sleep(3600)
 
-        raise TailError('Task %s execution has gone out of time' % self.config['sourceFolder'])
+        raise TailError('Task tail.dc execution has gone out of time')
 
     def source(self, tail_file='', tail_pos=0, outputQueue=None):
-        setted = False
         with open(tail_file) as file_:
             # Go to the end of file
             # 从末尾开始遍历
             if tail_pos == 'end':
                 file_.seek(0, 2)
-            else:
-                file_.seek(intval(tail_pos), 0)
-            while True:
-                line = file_.readline()
                 tail_pos = file_.tell()
-                print 'line', line, tail_pos
-                if not line:
-                    file_.seek(tail_pos, 0)
-                    # 记录最新偏移位置
-                    if not setted:
-                        self.setPosition(tail_file=tail_file, tail_pos=tail_pos)
-                        setted = True
-                    time.sleep(3)
-                else:
+            else:
+                tail_pos = intval(tail_pos)
+                file_.seek(tail_pos, 0)
+            while True:
+                for line in file_.readlines(self.config['chunk_size']):
+                    tail_pos = file_.tell()
                     try:
                         outputQueue.put_nowait((tail_file, tail_pos, line))
-                        setted = False
                     except Exception, e:
                         self.setPosition(tail_file=tail_file, tail_pos=tail_pos)
                         raise TailError('channelQueue.put_nowait %s' % str(e))
+                else:
+                    file_.seek(tail_pos, 0)
+                    # 记录最新偏移位置
+                    self.setPosition(tail_file=tail_file, tail_pos=tail_pos)
+                    time.sleep(3)
 
     def channel(self, inputQueue=None, outputQueue=None):
         while True:
@@ -151,24 +178,19 @@ class tail(object):
             except Exception, e:
                 raise TailError('channel.inputQueue get error %s' % str(e))
 
-            if isinstance(data, type('')) and data == 'timeout':
-                continue
-                # _exit(1)
-
             tail_file, tail_pos, line = data
-            line = line.rstrip()
-            m = re.search(r'/da/v[\d\.]+/([\w\d]+)[\?|\s]+(.*?)&time=([\d]+)', line)
-            if m:
-                topic_name = m.group(1)
-                _time = floatval(m.group(3))
-                if _time > 1000000000:
-                    # 按主题、天、数据产生小时分割文件
-                    topic_file = '/%s/%s/h/%s' % (topic_name, time.strftime('%Y%m%d', time.localtime(_time)), time.strftime('%Y%m%d%H', time.localtime(_time)))
-                    try:
-                        outputQueue.put_nowait((tail_file, tail_pos, line, topic_file))
-                    except Exception, e:
-                        self.setPosition(tail_file=tail_file, tail_pos=tail_pos)
-                        raise TailError('sinkQueue.put_nowait %s' % str(e))
+            res = tail.callback(line, self.callback_data)
+            if not res:
+                continue
+            app_id, topic_name, data_time, log_time, row = res
+            ymdh = time.strftime('%Y%m%d%H', time.localtime(data_time))
+            # 按app_id、主题、数据时间、日志时间、文件随机数分割文件
+            topic_file = '/%s/%s/h-%s-%s.%s.log' % (app_id, topic_name, ymdh, time.strftime('%Y%m%d%H', time.localtime(log_time)), self.file_rand_id)
+            try:
+                outputQueue.put_nowait((tail_file, tail_pos, row, topic_file))
+            except Exception, e:
+                self.setPosition(tail_file=tail_file, tail_pos=tail_pos)
+                raise TailError('sinkQueue.put_nowait %s' % str(e))
 
     def sink(self, inputQueue=None):
         sinkto = False
@@ -194,7 +216,7 @@ class tail(object):
                 if topic_file not in batch:
                     batch[topic_file] = {'lines': '', 'tail_file': {}, 'rows': 0}
                 batch_pos[tail_file] = tail_pos
-                batch[topic_file]['lines'] += line + '\n'
+                batch[topic_file]['lines'] += line
                 batch[topic_file]['rows'] += 1
                 if batch[topic_file]['rows'] >= self.config['batch_size']:
                     sinkto = topic_file
@@ -203,8 +225,7 @@ class tail(object):
                 del_topic_file = {}
                 try:
                     for topic_file in batch:
-                        # 新增随机数，识别不同文件
-                        filepath = '%s%s-%s.%s.log' % (self.config['sinkFolder'], topic_file, time.time(), random.randint(1, 1000))
+                        filepath = '%s%s' % (self.config['sinkFolder'], topic_file)
                         # 先落地至本地缓存
                         self.writeLocal(lines=batch[topic_file]['lines'], filepath=filepath)
                         del_topic_file[topic_file] = 1
@@ -222,7 +243,7 @@ class tail(object):
                     del batch[dtf]
 
     def writeLocal(self, lines=[], filepath=''):
-        tmp_file = '%s%s' % (self.tmpFolder, filepath)
+        tmp_file = '%s%s' % (self.config['tmpFolder'], filepath)
         singleton.getinstance('pfile', 'core.libs.pfile').mkdirs(tmp_file, isFile=True)
         fp = open(tmp_file, 'a+')
         fp.write(lines)
@@ -230,92 +251,168 @@ class tail(object):
         return True
 
     def sinkHourFile(self):
+        now = True if 'now' in argv_cli['dicts'] else False
         # 每小时上传一次上一小时的文件, 并删除本地缓存
         while True:
-            if int(time.strftime('%M', time.localtime())) != self.atSink[0][1:]:
+            if not now and int(time.strftime('%M', time.localtime())) != int(self.config['atSink'][0][1:]):
                 time.sleep(50)
                 continue
+            now = False
+
+            localhdfspath = '%s%s' % (self.config['tmpFolder'], self.config['sinkFolder'])
+            if not singleton.getinstance('pfile').isdir(localhdfspath):
+                continue
+
+            # 上传线程池
+            uploadPool = WorkerManager(self.config['uploadPoolLen'])
+            uploadPool.parallel_for_complete()
+            start_time = time.time()
             prev_hour = int(time.strftime('%Y%m%d%H', time.localtime(time.time()-3600)))
-            localhdfspath = '%s%s' % (self.tmpFolder, self.config['sinkFolder'])
             for root, dirs, files in os.walk(localhdfspath):
-                # 不存在文件夹和文件，则删除该目录
-                if not dirs and not files:
-                    os.removedirs(root)
+                # 合并小时文件
+                if not files:
                     continue
-                if files:
-                    for f in files:
-                        # 压缩文件不再压缩
-                        if f[-3:] == '.gz':
-                            continue
-                        # 存在对应的压缩文件不处理
-                        if singleton.getinstance('pfile').isfile(f + '.gz'):
-                            continue
-                        if f.find('/d/') > 0:
-                            continue
-                        local_file = root.rstrip('/') + '/' + f
-                        hour_name = os.path.basename(local_file)[0:10]
-                        # 只上传上一个小时之前的文件
-                        if intval(hour_name) < 20000000 or intval(hour_name) > prev_hour:
-                            continue
-                        remote_file = local_file.replace(self.tmpFolder, '')
-                        start = time.time()
-                        local_file_gz = local_file + '.gz'
-                        os.system('gzip -c %s > %s' % (local_file, local_file_gz))
-                        output('compress local file: %s used time %s' % (local_file_gz, time.time() - start), logType='hdfs')
-                        # 上传
-                        start = time.time()
-                        singleton.getinstance('phdfs', 'core.db.phdfs').mkdirs(os.path.dirname(remote_file))
-                        singleton.getinstance('phdfs', 'core.db.phdfs').client().upload(os.path.dirname(remote_file) + '/', local_file_gz, overwrite=True)
-                        runtime = time.time() - start
-                        output('upload local file completed used time %s' % runtime, logType='hdfs')
-            time.sleep(60)
+                hfiles = {}
+                for f in files:
+                    if f[0:2] != 'h-':
+                        continue
+                    _h = f[2:12]
+                    if _h not in hfiles:
+                        hfiles[_h] = []
+                    hfiles[_h].append(f)
+
+                for _h in hfiles:
+                    # 时间未到
+                    if intval(_h) > prev_hour:
+                        continue
+                    # 已处理过
+                    completed_file = root + '/h' + _h + '.completed'
+                    if singleton.getinstance('pfile').isfile(completed_file):
+                        continue
+                    uploadPool.add(self._mergerFileHour2Hour, root, _h, hfiles[_h], completed_file)
+
+            # 队列完成则退出
+            uploadPool.stop(afterwork=False)
+            while uploadPool and uploadPool.aliveWorkers():
+                time.sleep(10)
+            output('sinkHourFile used time %s' % (time.time() - start_time), logType='tail')
+            del uploadPool
+
+    # 合并小时文件，压缩并上传
+    def _mergerFileHour2Hour(self, root, _h, _hfiles, completed_file):
+        # 新增合并文件
+        new_hour_file = '%s/h-%s-%s.%s.log' % (root, _h, time.strftime('%Y%m%d', time.localtime()), self.file_rand_id)
+        # 合并本地小时文件
+        os.system('cat %s/h-%s-*.log > %s' % (root, _h, new_hour_file))
+
+        # 删除小文件, 保留合并后的大文件，供隔天合并天文件
+        for f in _hfiles:
+            os.remove(root + '/' + f)
+
+        # 压缩合并后的文件
+        remote_file = new_hour_file.replace(self.config['tmpFolder'], '')
+        start = time.time()
+        if self.config['compress']:
+            upload_file = new_hour_file + '.gz'
+            os.system('gzip -c %s > %s' % (new_hour_file, upload_file))
+            output('compress local file: %s used time %s' % (upload_file, time.time() - start), logType='tail')
+        else:
+            upload_file = new_hour_file
+
+        # 上传合并后的文件
+        start = time.time()
+        singleton.getinstance('phdfs', 'core.db.phdfs').mkdirs(os.path.dirname(remote_file))
+        singleton.getinstance('phdfs', 'core.db.phdfs').upload(os.path.dirname(remote_file) + '/', upload_file, overwrite=True)
+        runtime = time.time() - start
+        output('upload local file completed: %s used time %s' % (upload_file, runtime), logType='tail')
+
+        # 标识该小时的文件已上传
+        fp = open(completed_file, 'a')
+        fp.write('')
+        fp.close()
+
+        # 上传后，删除本地压缩文件 .gz
+        if self.config['compress']:
+            os.remove(upload_file)
 
     # 合并本地文件
-    def mergeHourFile(self):
+    def mergeFileHour2Day(self):
         # 凌晨1点执行今天之前的所有数据
+        now = True if 'now' in argv_cli['dicts'] else False
         while True:
-            if int(time.strftime('%H', time.localtime())) != self.atSink[1][1:]:
+            if not now and int(time.strftime('%H', time.localtime())) != int(self.config['atSink'][1][1:]):
                 time.sleep(1800)
                 continue
-            localhdfspath = '%s%s' % (self.tmpFolder, self.config['sinkFolder'])
+            now = False
+            localhdfspath = '%s%s' % (self.config['tmpFolder'], self.config['sinkFolder'])
             yday = time.strftime('%Y%m%d', time.localtime(time.time()-24*3600))
-            # 列出所有文件夹  /ymd
-            if singleton.getinstance('pfile').isdir(localhdfspath):
-                for topic_name in os.listdir(localhdfspath):
-                    for day in os.listdir(localhdfspath + '/' + topic_name):
-                        if day > yday:
-                            continue
-                        # /ymd/*
-                        topic_folder = localhdfspath + '/' + topic_name + '/' + day
-                        day_folder = topic_folder + '/d'
-                        hour_folder = topic_folder + '/h'
-                        # 新增随机数，识别不同文件
-                        new_day_file = '%s/%s-%s.%s.log' % (day_folder, day, time.time(), random.randint(1, 1000))
-                        # 合并本地小时文件/h/*.log =>/d/.log
-                        os.system('cat %s/*.log > %s' % (hour_folder, new_day_file))
-                        # 压缩 /d/.log => /d/.log.gz
-                        gz_file = new_day_file + '.gz'
-                        os.system('gzip -c %s > %s' % (new_day_file, gz_file))
-                        # 上传至线上，天的文件夹
-                        remote_day_folder = day_folder.replace(self.tmpFolder, '')
-                        start = time.time()
-                        singleton.getinstance('phdfs', 'core.db.phdfs').mkdirs(remote_day_folder)
-                        singleton.getinstance('phdfs', 'core.db.phdfs').client().upload(remote_day_folder + '/', gz_file, overwrite=True)
-                        output('upload local file: %s completed used time %s' % (gz_file, time.time() - start), logType='hdfs')
-                        # 删除线上小时文件 /h/*
-                        remote_hour_folder = hour_folder.replace(self.tmpFolder, '')
-                        singleton.getinstance('phdfs', 'core.db.phdfs').delete(remote_hour_folder)
-                        # 删除本地文件
-                        os.system('rm -rf %s/*' % topic_folder)
-            time.sleep(3600)
+            if not singleton.getinstance('pfile').isdir(localhdfspath):
+                continue
+
+            for root, dirs, files in os.walk(localhdfspath):
+                # 合并小时文件
+                if not files:
+                    continue
+                dfiles = {}
+                for f in files:
+                    if f[0:2] != 'h-':
+                        # 未上传的天文件
+                        day = intval(f[0:8])
+                    else:
+                        day = intval(f[2:10])
+                    # 只处理今天之前的所有小时文件
+                    if day < 19710000 or day > int(yday):
+                        continue
+                    if day not in dfiles:
+                        dfiles[day] = []
+                    dfiles[day].append(f)
+
+                for day in dfiles:
+                    day_folder = root
+                    # singleton.getinstance('pfile').mkdirs(day_folder)
+                    hour_folder = root
+                    # 新增随机数，识别不同文件
+                    new_day_file = '%s/%s.%s.log' % (day_folder, time.strftime('%Y%m%d', time.localtime()), self.file_rand_id)
+                    # 合并本地小时文件
+                    for f in dfiles[day]:
+                        os.system('cat %s/%s >> %s' % (hour_folder, f, new_day_file))
+
+                    # 压缩 .log.gz
+                    if self.config['compress']:
+                        upload_file = new_day_file + '.gz'
+                        os.system('gzip -c %s > %s' % (new_day_file, upload_file))
+                    else:
+                        upload_file = new_day_file
+
+                    # 上传至线上
+                    remote_day_folder = day_folder.replace(self.config['tmpFolder'], '')
+                    start = time.time()
+                    singleton.getinstance('phdfs', 'core.db.phdfs').mkdirs(remote_day_folder)
+                    singleton.getinstance('phdfs', 'core.db.phdfs').upload(remote_day_folder + '/', upload_file, overwrite=True)
+                    output('upload local file: %s completed used time %s' % (upload_file, time.time() - start), logType='tail')
+
+                    # 删除线上小时文件 /h/*
+                    remote_hour_folder = hour_folder.replace(self.config['tmpFolder'], '')
+                    singleton.getinstance('phdfs', 'core.db.phdfs').delete(remote_hour_folder + '/h-%s*.log' % day)
+
+                    # 删除本地小时文件 h-{hour}*.log
+                    os.system('rm -rf %s/h-%s*.log' % (hour_folder, day))
+                    # 删除本地小时完成标识文件 h{hour}.completed
+                    os.system('rm -rf %s/h%s*.completed*' % (hour_folder, day))
+                    # 删除本地天文件 *.log  *.log.gz
+                    os.system('rm -rf %s/%s*' % (day_folder, day))
 
     # 偏移量存储文件
     def getPosFilePath(self, tail_file=''):
-        return '%s/position/%s.pos' % (self.tmpFolder, os.path.basename(tail_file)[0:12] + '-' + md5(tail_file)[0:6])
+        return '%s/position/%s.pos' % (self.config['tmpFolder'], os.path.basename(tail_file)[0:12] + '-' + md5(tail_file)[0:6])
 
     # 设置偏移位置
     def setPosition(self, tail_file='', tail_pos=0):
-        fp = open(self.getPosFilePath(tail_file), 'r+')
+        posf = self.getPosFilePath(tail_file)
+        if not singleton.getinstance('pfile').isfile(posf):
+            singleton.getinstance('pfile').mkdirs(posf, True)
+
+        fp = open(posf, 'w')
         fp.write(str(tail_pos))
         fp.close()
 
